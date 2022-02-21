@@ -21,8 +21,8 @@ return new class extends Migration
             $table->string('password');
             $table->date('dob');
             $table->string('phone');
-            $table->foreignId('department_id');
-            $table->foreignId('role_id');
+            $table->foreignId('department_id')->constrained();
+            $table->foreignId('role_id')->constrained();
             $table->string('designation');
             $table->string('address');
             $table->string('image');
@@ -30,7 +30,7 @@ return new class extends Migration
             $table->string('pan_number');
             $table->date('joining_date');
             $table->string('salary');
-            $table->foreignId('shift_id');
+            $table->foreignId('shift_id')->constrained();
             $table->timestamps();
         });
     }

@@ -24,6 +24,10 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 
 Route::apiResource('shifts', \App\Http\Controllers\ShiftController::class);
 
+Route::apiResource('amenities', \App\Http\Controllers\AmenityController::class);
+
+Route::apiResource('floors', \App\Http\Controllers\FloorController::class);
+
 Route::apiResource('departments', \App\Http\Controllers\DepartmentController::class);
 
 Route::apiResource('roles', \App\Http\Controllers\RoleController::class);
@@ -31,3 +35,5 @@ Route::apiResource('roles', \App\Http\Controllers\RoleController::class);
 Route::apiResource('employees', \App\Http\Controllers\EmployeeController::class);
 
 Route::apiResource('housekeepings', \App\Http\Controllers\HousekeepingController::class);
+
+Route::apiResource('halls', \App\Http\Controllers\HallController::class);
