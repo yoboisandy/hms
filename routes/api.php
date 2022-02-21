@@ -34,4 +34,6 @@ Route::apiResource('roles', \App\Http\Controllers\RoleController::class);
 
 Route::apiResource('employees', \App\Http\Controllers\EmployeeController::class);
 
+Route::apiResource('housekeepings', \App\Http\Controllers\HousekeepingController::class);
+
 Route::apiResource('halls', \App\Http\Controllers\HallController::class);
