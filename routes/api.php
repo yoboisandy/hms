@@ -29,3 +29,5 @@ Route::apiResource('departments', \App\Http\Controllers\DepartmentController::cl
 Route::apiResource('roles', \App\Http\Controllers\RoleController::class);
 
 Route::apiResource('employees', \App\Http\Controllers\EmployeeController::class);
+
+Route::apiResource('housekeepings', \App\Http\Controllers\HousekeepingController::class);
