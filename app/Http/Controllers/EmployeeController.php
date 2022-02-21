@@ -53,7 +53,7 @@ class EmployeeController extends Controller
 
         $image_name = $name . "." . $ext;
 
-        $data['image'] = $request->file('image')->storeAs('image', $image_name);
+        $data['image'] = $request->file('image')->storeAs('public/images/employees', $image_name);
 
         $data['password'] = bcrypt($request->password);
 
@@ -105,7 +105,7 @@ class EmployeeController extends Controller
 
         $image_name = $name . "." . $ext;
 
-        $data['image'] = $request->file('image')->storeAs('image', $image_name);
+        $data['image'] = $request->file('image')->storeAs('public/images/employees', $image_name);
 
 
         $data['password'] = bcrypt($request->password);
