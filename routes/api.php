@@ -1,8 +1,9 @@
 <?php
 
-use App\Http\Controllers\FloorController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\FloorController;
+use App\Http\Controllers\AmenityController;
 
 /*
 |--------------------------------------------------------------------------
@@ -20,3 +21,4 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 });
 
 Route::apiResource('floors', FloorController::class);
+Route::apiResource('amenities', AmenityController::class);
