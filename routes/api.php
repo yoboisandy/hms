@@ -3,8 +3,8 @@
 use App\Models\Shift;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\FloorController;
-use App\Http\Controllers\AmenityController;
+
+use App\Models\Role;
 
 /*
 |--------------------------------------------------------------------------
@@ -27,3 +27,5 @@ Route::apiResource('shifts', \App\Http\Controllers\ShiftController::class);
 Route::apiResource('departments', \App\Http\Controllers\DepartmentController::class);
 
 Route::apiResource('roles', \App\Http\Controllers\RoleController::class);
+
+Route::apiResource('employees', \App\Http\Controllers\EmployeeController::class);
