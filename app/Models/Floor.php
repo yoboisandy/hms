@@ -10,4 +10,9 @@ class Floor extends Model
     use HasFactory;
 
     protected $fillable = ['name', 'floor_number', 'description'];
+
+    public function hall()
+    {
+        return $this->hasMany(Hall::class);
+    }
 }

@@ -15,7 +15,8 @@ class HallController extends Controller
      */
     public function index()
     {
-        $data = Hall::all();
+        $data = Hall::with(['floor'])->get();
+        dd($data);
         return response()->json($data);
     }
 

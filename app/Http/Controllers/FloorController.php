@@ -14,7 +14,8 @@ class FloorController extends Controller
      */
     public function index()
     {
-        $floor = Floor::all();
+        $floor = Floor::with(['hall'])->get();
+        dd($floor);
         return response()->json($floor);
     }
 

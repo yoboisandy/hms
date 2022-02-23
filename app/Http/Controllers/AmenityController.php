@@ -16,8 +16,8 @@ class AmenityController extends Controller
      */
     public function index()
     {
-        $amenities = Amenity::all();
-        return response()->json($amenities);
+        $data = Amenity::with(['hall'])->get();
+        return response()->json($data);
     }
 
     /**
