@@ -2,8 +2,7 @@
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\FloorController;
-use App\Http\Controllers\AmenityController;
+
 
 /*
 |--------------------------------------------------------------------------
@@ -20,5 +19,6 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
 
-Route::apiResource('floors', FloorController::class);
-Route::apiResource('amenities', AmenityController::class);
+Route::apiResource('floors', \App\Http\Controllers\FloorController::class);
+Route::apiResource('amenities', \App\Http\Controllers\AmenityController::class);
+Route::apiResource('roomtypes', \App\Http\Controllers\RoomTypeController::class);
