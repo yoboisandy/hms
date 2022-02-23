@@ -15,4 +15,8 @@ class Amenity extends Model
     {
         return $this->hasMany(Hall::class);
     }
+    public function room_types()
+    {
+        return $this->belongsToMany(RoomType::class, 'amenity_roomtype', 'amenity_id', 'roomtype_id');
+    }
 }

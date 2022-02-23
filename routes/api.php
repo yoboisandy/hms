@@ -37,3 +37,5 @@ Route::apiResource('employees', \App\Http\Controllers\EmployeeController::class)
 Route::apiResource('housekeepings', \App\Http\Controllers\HousekeepingController::class);
 
 Route::apiResource('halls', \App\Http\Controllers\HallController::class);
+
+Route::apiResource('roomtypes', \App\Http\Controllers\RoomTypeController::class);
