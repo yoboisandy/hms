@@ -10,4 +10,9 @@ class Amenity extends Model
     use HasFactory;
 
     protected $fillable = ['name', 'icon', 'description'];
+
+    public function hall()
+    {
+        return $this->hasMany(Hall::class);
+    }
 }

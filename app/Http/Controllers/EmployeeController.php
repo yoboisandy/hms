@@ -6,7 +6,7 @@ use App\Models\Employee;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 
-use phpDocumentor\Reflection\PseudoTypes\Numeric_;
+
 
 class EmployeeController extends Controller
 {
@@ -17,7 +17,8 @@ class EmployeeController extends Controller
      */
     public function index()
     {
-        $data = Employee::all();
+        $data = Employee::with(['department', 'role', 'shift'])->get();
+        dd($data);
         return response()->json($data);
     }
 

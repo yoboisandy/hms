@@ -14,8 +14,8 @@ class RoleController extends Controller
      */
     public function index()
     {
-        $data = Role::all();
-
+        $data = Role::with(['employees'])->get();
+        dd($data);
         return response()->json($data);
     }
 
@@ -73,7 +73,8 @@ class RoleController extends Controller
      */
     public function destroy(Role $role)
     {
-        $role->delete;
+        $role->delete();
+
         return response()->json(['message' => 'Role deleted sucessfully']);
     }
 }
