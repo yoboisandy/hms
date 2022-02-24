@@ -39,3 +39,5 @@ Route::apiResource('housekeepings', \App\Http\Controllers\HousekeepingController
 Route::apiResource('halls', \App\Http\Controllers\HallController::class);
 
 Route::apiResource('roomtypes', \App\Http\Controllers\RoomTypeController::class);
+
+Route::apiResource('rooms', \App\Http\Controllers\RoomController::class);
