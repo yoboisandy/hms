@@ -18,6 +18,6 @@ class Hall extends Model
 
     public function amenity()
     {
-        return $this->hasMany(Hall::class);
+        return $this->belongsToMany(Amenity::class);
     }
 }
