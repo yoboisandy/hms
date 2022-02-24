@@ -13,7 +13,7 @@ class Amenity extends Model
 
     public function hall()
     {
-        return $this->hasMany(Hall::class);
+        return $this->belongsToMany(Hall::class);
     }
     public function room_types()
     {
