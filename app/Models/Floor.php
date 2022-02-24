@@ -15,4 +15,9 @@ class Floor extends Model
     {
         return $this->hasMany(Hall::class);
     }
+
+    public function room()
+    {
+        return $this->hasMany(Room::class);
+    }
 }
