@@ -41,6 +41,7 @@ class EmployeeSeeder extends Seeder
             'dob' => '2007/10/12',
             'phone' => '1414142536',
             'department_id' => '2',
+            'role_id' => '1',
             'designation' => 'Mr.',
             'address' => 'Tandi 6,Chitwan',
             'image' => 'images/amenities/RECBzrohMPpEKBMnlDyS8cNr0SK02v.jpg',
