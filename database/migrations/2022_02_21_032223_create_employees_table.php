@@ -22,7 +22,6 @@ return new class extends Migration
             $table->date('dob');
             $table->string('phone');
             $table->foreignId('department_id')->constrained();
-            $table->foreignId('role_id')->constrained();
             $table->string('designation');
             $table->string('address');
             $table->string('image');

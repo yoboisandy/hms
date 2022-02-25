@@ -9,7 +9,7 @@ class Employee extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['firstname', 'lastname', 'email', 'password', 'dob', 'phone', 'department_id', 'role_id', 'designation', 'address', 'image', 'citizenship_number', 'pan_number', 'joining_date', 'salary', 'shift_id'];
+    protected $fillable = ['firstname', 'lastname', 'email', 'password', 'dob', 'phone', 'department_id', 'designation', 'address', 'image', 'citizenship_number', 'pan_number', 'joining_date', 'salary', 'shift_id'];
 
 
     public function department()
@@ -17,10 +17,7 @@ class Employee extends Model
         return $this->belongsTo(Department::class);
     }
 
-    public function role()
-    {
-        return $this->belongsTo(Role::class);
-    }
+
 
     public function shift()
     {

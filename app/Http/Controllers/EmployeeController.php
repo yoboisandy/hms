@@ -16,8 +16,8 @@ class EmployeeController extends Controller
      */
     public function index()
     {
-        $data = Employee::with(['department', 'role', 'shift'])->get();
-        dd($data);
+        $data = Employee::with(['department', 'shift'])->get();
+
         return response()->json($data);
     }
 
