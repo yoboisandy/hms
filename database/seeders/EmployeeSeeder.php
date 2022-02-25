@@ -26,13 +26,14 @@ class EmployeeSeeder extends Seeder
             'role_id' => '4',
             'designation' => 'Mr',
             'address' => 'Tandi 6,Chitwan',
-            'image' => 'hello.jpg',
+            'image' => 'images/amenities/RECBzrohMPpEKBMnlDyS8cNr0SK02v.jpg',
             'citizenship_number' => '12-4545-12457895',
-            'pan_number' => '45789456',
+            'pan_number' => '457894561',
             'joining_date' => '2075/2/14',
             'salary' => '5000',
             'shift_id' => '1',
         ]);
+
         Employee::create([
             'firstname' => 'Samer',
             'lastname' => 'Chettri',

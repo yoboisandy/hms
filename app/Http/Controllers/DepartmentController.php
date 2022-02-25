@@ -17,7 +17,6 @@ class DepartmentController extends Controller
     {
         $data = Department::with('employees')->get();
 
-
         return response()->json($data);
     }
 
