@@ -15,12 +15,16 @@ class DepartmentSeeder extends Seeder
      */
     public function run()
     {
-        Department::create([
+        $dept = Department::create([
             'name' => 'Housekeeping',
         ]);
-        Department::create([
+        $dept->roles()->sync([2]);
+
+        $dept = Department::create([
             'name' => 'Kitchen',
         ]);
+        $dept->roles()->sync([4]);
+
         Department::create([
             'name' => 'FrontOffice',
         ]);

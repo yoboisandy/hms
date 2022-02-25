@@ -16,7 +16,7 @@ class HallController extends Controller
     public function index()
     {
         $data = Hall::with(['floor', 'amenity'])->get();
-        dd($data);
+
         return response()->json($data);
     }
 
@@ -33,11 +33,13 @@ class HallController extends Controller
             'description' => ['required'],
             'base_occupancy' => ['required'],
             'high_occupancy' => ['required'],
-            'amenity_id' => ['required', 'exists:amenities, id'],
+            'amenity_id' => ['required', 'exists:amenities,id'],
             'floor_id' => ['required', 'exists:floors,id'],
             'image' => ['required', 'image', 'mimes:jpg,jpeg,png'],
             'base_price' => ['required'],
             'high_price' => ['required'],
+            'amenities' => ['required', 'array'],
+            'amenities.*' => ['exists:amenities,id'],
         ]);
 
         $name = Str::random(20);
@@ -47,8 +49,8 @@ class HallController extends Controller
         $data['image'] = $request->file('image')->storeAs('public/images/halls', $image_name);
 
 
-        Hall::create($data);
-
+        $hall = Hall::create($data);
+        $hall->amenities()->sync($request->amenities);
         return response()->json(['message' => 'Hall added sucessfully']);
     }
 

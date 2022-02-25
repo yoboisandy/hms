@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Department;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class DepartmentController extends Controller
 {
@@ -30,9 +31,15 @@ class DepartmentController extends Controller
     {
         $data = $request->validate([
             'name' => ['required', 'unique:departments,name', 'alpha'],
+            'roles' => ['required', 'array'],
+            'roles.*' => ['exists:roles,id'],
         ]);
 
-        Department::create($data);
+        DB::transaction(function () use ($data, $request) {
+            $dept = Department::create($data);
+            $dept->roles()->sync($request->roles);
+        });
+
 
         return response()->json(['message' => 'Department added sucessfully']);
     }

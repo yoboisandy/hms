@@ -16,7 +16,7 @@ class Department extends Model
         return $this->hasMany(Employee::class);
     }
 
-    public function role()
+    public function roles()
     {
         return $this->belongsToMany(Role::class);
     }

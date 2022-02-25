@@ -16,8 +16,8 @@ class EmployeeController extends Controller
      */
     public function index()
     {
-        $data = Employee::with(['department', 'role', 'shift'])->get();
-        dd($data);
+        $data = Employee::with(['department', 'shift'])->get();
+
         return response()->json($data);
     }
 
@@ -37,7 +37,7 @@ class EmployeeController extends Controller
             'dob' => ['required'],
             'phone' => ['required'],
             'department_id' => ['required', 'exists:departments, id'],
-            'role_id' => ['required', 'exists:roles, id'],
+
             'designation' => ['required', 'alpha'],
             'address' => ['required',],
             'image' => ['required', 'image', 'mimes:png,jpg,jpeg'],
@@ -88,10 +88,9 @@ class EmployeeController extends Controller
             'password' => ['required', 'min:8'],
             'dob' => ['required'],
             'phone' => ['required'],
-            'department_id' => ['required'],
-            'role_id' => ['required'],
+            'department_id' => ['required', 'exists:departments, id'],
             'designation' => ['required', 'alpha'],
-            'address' => ['required'],
+            'address' => ['required',],
             'image' => ['required', 'image', 'mimes:png,jpg,jpeg'],
             'citizenship_number' => ['required'],
             'pan_number' => ['required'],
