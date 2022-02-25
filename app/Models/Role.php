@@ -12,8 +12,10 @@ class Role extends Model
 
     protected $fillable = ['name'];
 
-    public function employees()
+
+
+    public function department()
     {
-        return $this->hasMany(Employee::class);
+        return $this->belongsToMany(Department::class);
     }
 }
