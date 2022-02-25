@@ -17,6 +17,10 @@ class Employee extends Model
         return $this->belongsTo(Department::class);
     }
 
+    public function role()
+    {
+        return $this->belongsTo(Role::class);
+    }
 
 
     public function shift()
