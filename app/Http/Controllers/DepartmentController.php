@@ -30,7 +30,7 @@ class DepartmentController extends Controller
     public function store(Request $request)
     {
         $data = $request->validate([
-            'name' => ['required', 'unique:departments,name', 'alpha'],
+            'name' => ['required', 'unique:departments,name'],
             'roles' => ['required', 'array'],
             'roles.*' => ['exists:roles,id'],
         ]);
@@ -65,10 +65,16 @@ class DepartmentController extends Controller
     public function update(Request $request, Department $department)
     {
         $data = $request->validate([
-            'name' => ['required', 'unique:departments,name', 'alpha'],
+            'name' => ['required', 'unique:departments,name'],
+            'roles' => ['required', 'array'],
+            'roles.*' => ['exists:roles,id'],
+
         ]);
 
-        $department->update($data);
+        DB::transaction(function () use ($data, $request, $department) {
+            $department->update($data);
+            $department->roles()->sync($request->roles);
+        });
 
         return response()->json(['message' => 'Department updated sucessfully']);
     }
