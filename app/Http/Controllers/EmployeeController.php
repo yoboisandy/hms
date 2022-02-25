@@ -5,8 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Employee;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
-
-
+use Illuminate\Validation\Rules\Exists;
 
 class EmployeeController extends Controller
 {
@@ -37,8 +36,8 @@ class EmployeeController extends Controller
             'password' => ['required', 'min:8'],
             'dob' => ['required'],
             'phone' => ['required'],
-            'department_id' => ['required'],
-            'role_id' => ['required'],
+            'department_id' => ['required', 'exists:departments, id'],
+            'role_id' => ['required', 'exists:roles, id'],
             'designation' => ['required', 'alpha'],
             'address' => ['required',],
             'image' => ['required', 'image', 'mimes:png,jpg,jpeg'],

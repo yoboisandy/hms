@@ -122,6 +122,7 @@ class RoomtypeController extends Controller
      */
     public function destroy(Roomtype $roomtype)
     {
+
         $roomtype->delete();
         return response()->json(["message" => "Room Type Deleted Successfully"]);
     }
