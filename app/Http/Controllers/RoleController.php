@@ -15,7 +15,7 @@ class RoleController extends Controller
     public function index()
     {
         $data = Role::with(['employees'])->get();
-        dd($data);
+
         return response()->json($data);
     }
 
