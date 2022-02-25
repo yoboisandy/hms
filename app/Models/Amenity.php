@@ -11,7 +11,7 @@ class Amenity extends Model
 
     protected $fillable = ['name', 'icon', 'description'];
 
-    public function hall()
+    public function halls()
     {
         return $this->belongsToMany(Hall::class);
     }

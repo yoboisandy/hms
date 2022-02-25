@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Hall;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class HallController extends Controller
 {
@@ -15,7 +16,7 @@ class HallController extends Controller
      */
     public function index()
     {
-        $data = Hall::with(['floor', 'amenity'])->get();
+        $data = Hall::with(['floor', 'amenities'])->get();
         return response()->json($data);
     }
 
@@ -32,11 +33,13 @@ class HallController extends Controller
             'description' => ['required'],
             'base_occupancy' => ['required'],
             'high_occupancy' => ['required'],
-            'amenity_id' => ['required', 'exists:amenities, id'],
+            'amenity_id' => ['required', 'exists:amenities,id'],
             'floor_id' => ['required', 'exists:floors,id'],
             'image' => ['required', 'image', 'mimes:jpg,jpeg,png'],
             'base_price' => ['required'],
             'high_price' => ['required'],
+            'amenities' => ['required', 'array'],
+            'amenities.*' => ['exists:amenities,id'],
         ]);
 
         $name = Str::random(20);
@@ -45,8 +48,10 @@ class HallController extends Controller
 
         $data['image'] = $request->file('image')->storeAs('public/images/halls', $image_name);
 
-
-        Hall::create($data);
+        DB::transaction(function () use ($data, $request) {
+            $hall = Hall::create($data);
+            $hall->amenities()->sync($request->amenities);
+        });
 
         return response()->json(['message' => 'Hall added sucessfully']);
     }
@@ -76,11 +81,13 @@ class HallController extends Controller
             'description' => ['required'],
             'base_occupancy' => ['required'],
             'high_occupancy' => ['required'],
-            'amenity_id' => ['required', 'exists:amenities, id'],
+            'amenity_id' => ['required', 'exists:amenities,id'],
             'floor_id' => ['required', 'exists:floors,id'],
             'image' => ['required', 'image', 'mimes:jpg,jpeg,png'],
             'base_price' => ['required'],
             'high_price' => ['required'],
+            'amenities' => ['required', 'array'],
+            'amenities.*' => ['exists:amenities,id'],
         ]);
 
         $name = Str::random(20);
@@ -89,7 +96,10 @@ class HallController extends Controller
 
         $data['image'] = $request->file('image')->storeAs('public/images/halls', $image_name);
 
-        $hall->update($data);
+        DB::transaction(function () use ($data, $request, $hall) {
+            $hall->update($data);
+            $hall->amenities()->sync($request->amenities);
+        });
 
         return response()->json(['message' => 'Hall updated sucessfully']);
     }

@@ -16,7 +16,7 @@ class Hall extends Model
         return $this->belongsTo(Floor::class);
     }
 
-    public function amenity()
+    public function amenities()
     {
         return $this->belongsToMany(Amenity::class);
     }
