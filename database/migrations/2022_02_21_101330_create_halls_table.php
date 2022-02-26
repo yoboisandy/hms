@@ -16,7 +16,7 @@ return new class extends Migration
         Schema::create('halls', function (Blueprint $table) {
             $table->id();
             $table->string('name');
-            $table->string('description');
+            $table->text('description');
             $table->string('base_occupancy');
             $table->string('high_occupancy');
             $table->foreignId('floor_id')->constrained();
