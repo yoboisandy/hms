@@ -64,12 +64,16 @@ class CustomerController extends Controller
         $data = $request->validate([
             'firstname' => ['required'],
             'lastname' => ['required'],
-            'email' => ['required', 'unique:customers,email'],
             'phone' => ['required'],
             'address' => ['required'],
-            'password' => ['required'],
             'citizenship_number' => ['required'],
         ]);
+
+        if ($customer->email != $request->email) {
+            $data = $request->validate([
+                'email' => ['required', 'unique:customers,email'],
+            ]);
+        }
 
         $customer->update($data);
 
