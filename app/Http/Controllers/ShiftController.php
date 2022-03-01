@@ -15,7 +15,6 @@ class ShiftController extends Controller
     public function index()
     {
         $data = Shift::with('employees')->get();
-        dd($data);
         return response()->json($data);
     }
 
