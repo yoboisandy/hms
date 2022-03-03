@@ -22,6 +22,8 @@ class DatabaseSeeder extends Seeder
             HousekeepingSeeder::class,
             EmployeeSeeder::class,
             CustomerSeeder::class,
+            FloorSeeder::class,
+            RoomtypeSeeder::class,
         ]);
     }
 }
