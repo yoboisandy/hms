@@ -15,7 +15,7 @@ class ShiftController extends Controller
     public function index()
     {
         $data = Shift::with('employees')->get();
-        dd($data);
+
         return response()->json($data);
     }
 
@@ -28,7 +28,7 @@ class ShiftController extends Controller
     public function store(Request $request)
     {
         $data = $request->validate([
-            'name' => ['required', 'unique:shifts,name', 'alpha'],
+            'name' => ['required', 'unique:shifts,name'],
         ]);
 
         Shift::create($data);
@@ -57,7 +57,7 @@ class ShiftController extends Controller
     public function update(Request $request, Shift $shift)
     {
         $data = $request->validate([
-            'name' => ['required', 'unique:shifts,name', 'alpha'],
+            'name' => ['required', 'unique:shifts,name'],
         ]);
 
         $shift->update($data);

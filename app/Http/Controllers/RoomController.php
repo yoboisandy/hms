@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Room;
+use Illuminate\Auth\Events\Validated;
 use Illuminate\Http\Request;
 
 class RoomController extends Controller
@@ -61,7 +62,6 @@ class RoomController extends Controller
     public function update(Request $request, Room $room)
     {
         $data = $request->validate([
-            'room_no' => ['required', 'unique:rooms,room_no'],
             'floor_id' => ['required', 'exists:floors,id'],
             'capacity' => ['required'],
             'price' => ['required'],
@@ -69,6 +69,12 @@ class RoomController extends Controller
             'roomtype_id' => ['required', 'exists:roomtypes,id'],
 
         ]);
+
+        if ($room->room_no != $request->room_no) {
+            $data = $request->validate([
+                'room_no' => ['required', 'unique:rooms,room_no', 'exists:rooms,room_no'],
+            ]);
+        }
 
         $room->update($data);
         return response()->json(['message' => 'Room Updated Sucessfully']);
