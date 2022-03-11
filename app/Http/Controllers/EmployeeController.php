@@ -40,7 +40,7 @@ class EmployeeController extends Controller
             'role_id' => ['required', 'exists:roles,id'],
             'designation' => ['required', 'alpha'],
             'address' => ['required',],
-            'image' => ['required', 'image', 'mimes:png,jpg,jpeg'],
+            'image' => ['required', 'image'],
             'citizenship_number' => ['required'],
             'pan_number' => ['required'],
             'joining_date' => ['required', 'before_or_equal:now'],
@@ -53,7 +53,9 @@ class EmployeeController extends Controller
 
         $image_name = $name . "." . $ext;
 
-        $data['image'] = $request->file('image')->storeAs('public/images/employees', $image_name);
+        $request->file('image')->storeAs('public/images/employees', $image_name);
+
+        $data['image'] = "images/employees/" . $image_name;
 
         $data['password'] = bcrypt($request->password);
 

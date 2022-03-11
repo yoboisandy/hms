@@ -15,7 +15,7 @@ class DepartmentController extends Controller
      */
     public function index()
     {
-        $data = Department::with('employees')->get();
+        $data = Department::with('employees', 'roles')->get();
 
         return response()->json($data);
     }

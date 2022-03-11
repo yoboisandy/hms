@@ -14,7 +14,7 @@ class RoleController extends Controller
      */
     public function index()
     {
-        $data = Role::with(['employees'])->get();
+        $data = Role::with('employees', 'department')->get();
 
         return response()->json($data);
     }
@@ -56,9 +56,12 @@ class RoleController extends Controller
      */
     public function update(Request $request, Role $role)
     {
-        $data = $request->validate([
-            'name' => ['required', 'unique:roles,name', 'alpha'],
-        ]);
+        $data = $request->validate([]);
+        if ($role->name != $request->name) {
+            $data = $request->validate([
+                'name' => ['required', 'unique:roles,name', 'alpha'],
+            ]);
+        }
 
         $role->update($data);
 

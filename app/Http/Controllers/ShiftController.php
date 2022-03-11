@@ -56,9 +56,12 @@ class ShiftController extends Controller
      */
     public function update(Request $request, Shift $shift)
     {
-        $data = $request->validate([
-            'name' => ['required', 'unique:shifts,name'],
-        ]);
+        $data = $request->validate([]);
+        if ($shift->name != $request->name) {
+            $data = $request->validate([
+                'name' => ['required', 'unique:shifts,name', 'alpha'],
+            ]);
+        }
 
         $shift->update($data);
 
