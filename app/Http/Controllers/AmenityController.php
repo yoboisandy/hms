@@ -16,7 +16,7 @@ class AmenityController extends Controller
      */
     public function index()
     {
-        $data = Amenity::all();
+        $data = Amenity::with('halls', 'room_types')->get();
         return response()->json($data);
     }
 
@@ -31,7 +31,7 @@ class AmenityController extends Controller
         $data = $request->validate([
             'name' => ['required'],
             'description' => ['nullable'],
-            'icon' => ['required', 'image', 'mimes:png,jpg']
+            'icon' => ['required', 'image', 'mimes:png,jpg'],
         ]);
 
         $ext = $request->file('icon')->extension();
