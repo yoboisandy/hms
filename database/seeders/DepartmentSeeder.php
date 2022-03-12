@@ -25,9 +25,9 @@ class DepartmentSeeder extends Seeder
         ]);
         $dept->roles()->sync([4]);
 
-        Department::create([
+        $dept = Department::create([
             'name' => 'FrontOffice',
         ]);
-        $dept->roles()->sync([4]);
+        $dept->roles()->sync([1, 2]);
     }
 }

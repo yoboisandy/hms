@@ -28,7 +28,7 @@ class FloorController extends Controller
     {
         $data = $request->validate([
             'name' => ['required', 'string', 'unique:floors,name'],
-            'floor_number' => ['required', 'integer'],
+            'floor_number' => ['required', 'integer', 'unique:floors,floor_number'],
             'description' => ['required']
         ]);
 
