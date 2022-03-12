@@ -51,6 +51,8 @@ class DepartmentController extends Controller
      */
     public function show(Department $department)
     {
+
+        $department->load('roles');
         return response()->json($department);
     }
 

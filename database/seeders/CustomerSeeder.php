@@ -16,31 +16,31 @@ class CustomerSeeder extends Seeder
     public function run()
     {
         Customer::create([
-            'firstname' => 'Customer',
-            'lastname' => 'Detail',
-            'email' => 'customer@customer.com',
+            'firstname' => 'Asim',
+            'lastname' => 'Poudel',
+            'email' => 'aspo@customer.com',
             'phone' => '7894561230',
-            'address' => 'Customer_address',
+            'address' => 'Gaindakot',
             'citizenship_number' => '1-1-24515',
             'password' => bcrypt('password'),
         ]);
 
         Customer::create([
-            'firstname' => 'Customer2',
-            'lastname' => 'Detail',
-            'email' => 'customer2@customer.com',
+            'firstname' => 'Sandeep',
+            'lastname' => 'Sharma',
+            'email' => 'sash@customer.com',
             'phone' => '7894578430',
-            'address' => 'Customer1_address',
+            'address' => 'Bharatpur-12',
             'citizenship_number' => '1-2-24515',
             'password' => bcrypt('password')
         ]);
 
         Customer::create([
-            'firstname' => 'Customer3',
-            'lastname' => 'Detail',
-            'email' => 'customer3@customer.com',
+            'firstname' => 'Sujan',
+            'lastname' => 'Maskey',
+            'email' => 'suku@customer.com',
             'phone' => '7894561650',
-            'address' => 'Customer3_address',
+            'address' => 'Nepalgunj',
             'citizenship_number' => '1-1-24515',
             'password' => bcrypt('password'),
         ]);

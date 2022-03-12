@@ -48,6 +48,7 @@ class RoomController extends Controller
      */
     public function show(Room $room)
     {
+        $room->load('roomtype');
         return response()->json($room);
     }
 
@@ -61,7 +62,7 @@ class RoomController extends Controller
     public function update(Request $request, Room $room)
     {
         $data = $request->validate([
-            'room_no' => ['required', 'unique:rooms,room_no'],
+            'room_no' => ['required', 'unique:rooms,room_no,' . $room->id],
             'floor_id' => ['required', 'exists:floors,id'],
             'capacity' => ['required'],
             'price' => ['required'],
