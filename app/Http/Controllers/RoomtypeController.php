@@ -33,17 +33,17 @@ class RoomtypeController extends Controller
 
 
         $data = $request->validate([
-            'type_name' => ['required', 'unique:roomtypes,type_name'],
+            'type_name' => ['required', 'unique:roomtypes,type_name', 'alpha'],
             'description' => ['nullable'],
-            'adult_occupancy' => ['required'],
-            'child_occupancy' => ['required'],
+            'adult_occupancy' => ['required', 'integer', 'gt:0'],
+            'child_occupancy' => ['required', 'integer', 'gt:0'],
             'image' => ['image', 'mimes:png,jpg'],
-            'base_occupancy' => ['required'],
-            'higher_occupancy' => ['required'],
-            'extra_bed' => ['required'],
-            'base_price' => ['required'],
-            'additional_price' => ['required'],
-            'extra_bed_price' => ['required'],
+            'base_occupancy' => ['required_with:higher_occupancy', 'min:1', 'integer', 'gt:0'],
+            'higher_occupancy' => ['required_with:base_occupancy', 'min:2', 'integer', 'gt:0'],
+            'extra_bed' => ['bail', 'required_with:extra_bed_price', 'integer', 'gt:0'],
+            'base_price' => ['required', 'integer', 'gt:0'],
+            'additional_price' => ['required', 'integer', 'gt:0'],
+            'extra_bed_price' => ['bail', 'required_with:extra_bed', 'integer', 'gt:0'],
             'amenities' => ['required', 'array'],
             'amenities.*' => ['exists:amenities,id'],
         ]);
@@ -85,17 +85,19 @@ class RoomtypeController extends Controller
     public function update(Request $request, Roomtype $roomtype)
     {
         $data = $request->validate([
-            'type_name' => ['required', 'unique:roomtypes,type_name,' . $roomtype->id],
+            'type_name' => ['required', 'unique:roomtypes,type_name', 'alpha'],
             'description' => ['nullable'],
-            'adult_occupancy' => ['required'],
-            'child_occupancy' => ['required'],
+            'adult_occupancy' => ['required', 'integer', 'gt:0'],
+            'child_occupancy' => ['required', 'integer', 'gt:0'],
             'image' => ['image', 'mimes:png,jpg'],
-            'base_occupancy' => ['required'],
-            'higher_occupancy' => ['required'],
-            'extra_bed' => ['required'],
-            'base_price' => ['required'],
-            'additional_price' => ['required'],
-            'extra_bed_price' => ['required'],
+            'base_occupancy' => ['required_with:higher_occupancy', 'min:1', 'integer', 'gt:0'],
+            'higher_occupancy' => ['required_with:base_occupancy', 'min:2', 'integer', 'gt:0'],
+            'extra_bed' => ['bail', 'required_with:extra_bed_price', 'integer', 'gt:0'],
+            'base_price' => ['required', 'integer', 'gt:0'],
+            'additional_price' => ['required', 'integer', 'gt:0'],
+            'extra_bed_price' => ['bail', 'required_with:extra_bed', 'integer', 'gt:0'],
+            'amenities' => ['required', 'array'],
+            'amenities.*' => ['exists:amenities,id'],
         ]);
 
         $ext = $request->file('image')->extension();

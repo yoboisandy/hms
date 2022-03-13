@@ -27,13 +27,14 @@ class CustomerController extends Controller
     public function store(Request $request)
     {
         $data = $request->validate([
-            'firstname' => ['required'],
-            'lastname' => ['required'],
+            'firstname' => ['required', 'alpha'],
+            'lastname' => ['required', 'alpha'],
             'email' => ['required', 'email', 'unique:customers,email'],
-            'phone' => ['required'],
+            'phone' => ['required', 'numeric', 'digits:10', 'regex:/((98)|(97))(\d){8}/'],
             'address' => ['required'],
             'password' => ['required'],
-            'citizenship_number' => ['required'],
+            'citizenship_number' => ['required', 'integer',  'gt:0', 'digits:10', 'regex:/(\d){10}/'],
+            // 36-02-74-02462
         ]);
 
         Customer::create($data);
@@ -62,16 +63,16 @@ class CustomerController extends Controller
     public function update(Request $request, Customer $customer)
     {
         $data = $request->validate([
-            'firstname' => ['required'],
-            'lastname' => ['required'],
-            'phone' => ['required'],
+            'firstname' => ['required', 'alpha'],
+            'lastname' => ['required', 'alpha'],
+            'phone' => ['required', 'numeric', 'digits:10', 'regex:/((98)|(97))(\d){8}/'],
             'address' => ['required'],
-            'citizenship_number' => ['required'],
+            'citizenship_number' => ['required', 'integer',  'gt:0', 'digits:10', 'regex:/(\d){10}/'],
         ]);
 
         if ($customer->email != $request->email) {
             $data = $request->validate([
-                'email' => ['required', 'unique:customers,email'],
+                'email' => ['required', 'email', 'unique:customers,email'],
             ]);
         }
 

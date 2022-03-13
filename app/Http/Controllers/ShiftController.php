@@ -28,7 +28,7 @@ class ShiftController extends Controller
     public function store(Request $request)
     {
         $data = $request->validate([
-            'name' => ['required', 'unique:shifts,name'],
+            'name' => ['required', 'unique:shifts,name', 'alpha'],
         ]);
 
         Shift::create($data);

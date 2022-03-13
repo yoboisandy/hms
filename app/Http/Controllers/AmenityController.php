@@ -29,7 +29,7 @@ class AmenityController extends Controller
     public function store(Request $request)
     {
         $data = $request->validate([
-            'name' => ['required'],
+            'name' => ['required', 'alpha'],
             'description' => ['nullable'],
             'icon' => ['required', 'image', 'mimes:png,jpg'],
         ]);
@@ -67,7 +67,7 @@ class AmenityController extends Controller
     public function update(Request $request, Amenity $amenity)
     {
         $data = $request->validate([
-            'name' => ['required'],
+            'name' => ['required', 'name'],
             'description' => ['nullable'],
             'icon' => ['required', 'image', 'mimes:png,jpg']
         ]);

@@ -27,9 +27,9 @@ class FloorController extends Controller
     public function store(Request $request)
     {
         $data = $request->validate([
-            'name' => ['required', 'string', 'unique:floors,name'],
+            'name' => ['required', 'alpha', 'unique:floors,name'],
             'floor_number' => ['required', 'integer', 'unique:floors,floor_number'],
-            'description' => ['required']
+            'description' => ['required'],
         ]);
 
         Floor::create($data);
@@ -58,9 +58,9 @@ class FloorController extends Controller
     public function update(Request $request, Floor $floor)
     {
         $data = $request->validate([
-            'name' => ['required', 'string'],
-            'floor_number' => ['required', 'integer'],
-            'description' => ['required']
+            'name' => ['required', 'alpha', 'unique:floors,name'],
+            'floor_number' => ['required', 'integer', 'unique:floors,floor_number'],
+            'description' => ['required'],
         ]);
 
         $floor->update($data);

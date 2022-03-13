@@ -6,6 +6,7 @@ use App\Models\Hall;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use phpDocumentor\Reflection\PseudoTypes\Numeric_;
 
 class HallController extends Controller
 {
@@ -31,13 +32,13 @@ class HallController extends Controller
         $data = $request->validate([
             'name' => ['required', 'unique:halls,name', 'alpha'],
             'description' => ['required'],
-            'base_occupancy' => ['required'],
-            'high_occupancy' => ['required'],
+            'base_occupancy' => ['required', 'integer'],
+            'high_occupancy' => ['required', 'integer'],
             'amenity_id' => ['required', 'exists:amenities,id'],
             'floor_id' => ['required', 'exists:floors,id'],
             'image' => ['required', 'image', 'mimes:jpg,jpeg,png'],
-            'base_price' => ['required'],
-            'high_price' => ['required'],
+            'base_price' => ['required', 'numeric'],
+            'high_price' => ['required', 'numeric'],
             'amenities' => ['required', 'array'],
             'amenities.*' => ['exists:amenities,id'],
         ]);
@@ -79,13 +80,13 @@ class HallController extends Controller
         $data = $request->validate([
             'name' => ['required', 'unique:halls,name', 'alpha'],
             'description' => ['required'],
-            'base_occupancy' => ['required'],
-            'high_occupancy' => ['required'],
+            'base_occupancy' => ['required', 'integer'],
+            'high_occupancy' => ['required', 'integer'],
             'amenity_id' => ['required', 'exists:amenities,id'],
             'floor_id' => ['required', 'exists:floors,id'],
             'image' => ['required', 'image', 'mimes:jpg,jpeg,png'],
-            'base_price' => ['required'],
-            'high_price' => ['required'],
+            'base_price' => ['required', 'numeric'],
+            'high_price' => ['required', 'numeric'],
             'amenities' => ['required', 'array'],
             'amenities.*' => ['exists:amenities,id'],
         ]);

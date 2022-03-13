@@ -30,11 +30,10 @@ class RoomController extends Controller
         $data = $request->validate([
             'room_no' => ['required', 'unique:rooms,room_no'],
             'floor_id' => ['required', 'exists:floors,id'],
-            'capacity' => ['required'],
-            'price' => ['required'],
+            'capacity' => ['required', 'integer', 'gt:0'],
+            'price' => ['required', 'integer', 'gt:0'],
             'description' => ['required'],
             'roomtype_id' => ['required', 'exists:roomtypes,id'],
-
         ]);
 
         Room::create($data);
@@ -63,13 +62,11 @@ class RoomController extends Controller
     public function update(Request $request, Room $room)
     {
         $data = $request->validate([
-            'room_no' => ['required', 'unique:rooms,room_no,' . $room->id],
             'floor_id' => ['required', 'exists:floors,id'],
-            'capacity' => ['required'],
-            'price' => ['required'],
+            'capacity' => ['required', 'integer', 'gt:0'],
+            'price' => ['required', 'integer', 'gt:0'],
             'description' => ['required'],
             'roomtype_id' => ['required', 'exists:roomtypes,id'],
-
         ]);
 
         if ($room->room_no != $request->room_no) {
