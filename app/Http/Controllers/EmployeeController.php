@@ -35,7 +35,7 @@ class EmployeeController extends Controller
             'lastname' => ['required', 'alpha'],
             'email' => ['required', 'unique:employees,email'],
             'password' => ['required', 'min:8'],
-            'dob' => ['required'],
+            'dob' => ['required', 'before_or_equal:now'],
             'phone' => ['required'],
             'department_id' => ['required', 'exists:departments,id'],
             'role_id' => ['required', 'exists:roles,id'],
