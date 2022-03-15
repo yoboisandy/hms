@@ -2,9 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\User;
 use App\Models\Employee;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Validation\Rules\Exists;
 
@@ -35,7 +37,7 @@ class EmployeeController extends Controller
             'lastname' => ['required', 'alpha'],
             'email' => ['required', 'unique:employees,email'],
             'password' => ['required', 'min:8'],
-            'dob' => ['required', 'before_or_equal:now'],
+            'dob' => ['required', 'after_or_equal:now'],
             'phone' => ['required'],
             'department_id' => ['required', 'exists:departments,id'],
             'role_id' => ['required', 'exists:roles,id'],
@@ -59,7 +61,13 @@ class EmployeeController extends Controller
         $data['image'] = "images/employees/" . $image_name;
 
         $data['password'] = bcrypt($request->password);
+        $user = User::create([
+            'email' => $data['email'],
+            'password' => $data['password'],
+            'role' => 'Employee',
+        ]);
 
+        $data['user_id'] = $user->id;
         Employee::create($data);
         return response()->json(['message' => 'Employee added sucessfully']);
     }
@@ -90,8 +98,7 @@ class EmployeeController extends Controller
             'firstname' => ['required', 'alpha'],
             'lastname' => ['required', 'alpha'],
             'email' => ['required', 'unique:employees,email'],
-            'password' => ['required', 'min:8'],
-            'dob' => ['required', 'before_or_equal:now'],
+            'dob' => ['required', 'after_or_equal:now'],
             'phone' => ['required'],
             'department_id' => ['required', 'exists:departments,id'],
             'role_id' => ['required', 'exists:roles,id'],
@@ -122,12 +129,26 @@ class EmployeeController extends Controller
             }
         }
 
-
-
-
         $data['password'] = bcrypt($request->password);
+        //getting user id from employee table
+        $user = User::find($employee->user_id);
+        //assigning email with data['email'] 
+        $u = ['email' => $data['email']];
+        DB::transaction(function () use ($data, $u, $user, $employee) {
+            $user->update($u);
+            $employee->update($data);
+        });
 
-        $employee->update($data);
+
+
+
+        // $user = User::find($employee->user_id);
+        // $u = ["email" => $data['email']];
+        // DB::transaction(function () use ($data, $u, $user, $employee) {
+        //     $user->update($u);
+        //     $employee->update($data);
+        // });
+
 
         return response()->json(['message' => 'Employee updated sucessfully']);
     }

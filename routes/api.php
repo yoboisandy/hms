@@ -45,3 +45,5 @@ Route::apiResource('rooms', \App\Http\Controllers\RoomController::class);
 Route::apiResource('customers', \App\Http\Controllers\CustomerController::class);
 
 Route::get('/count', [\App\Http\Controllers\CountController::class, 'countAll']);
+
+Route::apiResource('users', \App\Http\Controllers\UserController::class);

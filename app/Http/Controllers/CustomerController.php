@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\User;
 use App\Models\Customer;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class CustomerController extends Controller
 {
@@ -36,7 +38,12 @@ class CustomerController extends Controller
             'citizenship_number' => ['required', 'integer',  'gt:0', 'digits:10', 'regex:/(\d){10}/'],
         ]);
         $data['password'] = bcrypt($request->password);
-
+        $user = User::create([
+            'email' => $data['email'],
+            'password' => $data['password'],
+            'role' => 'Customer',
+        ]);
+        $data['user_id'] = $user->id;
         Customer::create($data);
 
         return response()->json(['message' => 'Customer added sucessfully']);
@@ -76,7 +83,12 @@ class CustomerController extends Controller
             ]);
         }
 
-        $customer->update($data);
+        $user = User::find($customer->user_id);
+        $u = ['email' => $data['email']];
+        DB::transaction(function () use ($user, $u, $data, $customer) {
+            $user->update($u);
+            $customer->update($data);
+        });
 
         return response()->json(['message' => 'Customer updated sucessfully']);
     }
