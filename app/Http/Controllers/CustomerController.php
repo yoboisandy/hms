@@ -32,10 +32,10 @@ class CustomerController extends Controller
             'email' => ['required', 'email', 'unique:customers,email'],
             'phone' => ['required', 'numeric', 'digits:10', 'regex:/((98)|(97))(\d){8}/'],
             'address' => ['required'],
-            'password' => ['required'],
+            'password' => ['required', 'min:8'],
             'citizenship_number' => ['required', 'integer',  'gt:0', 'digits:10', 'regex:/(\d){10}/'],
-            // 36-02-74-02462
         ]);
+        $data['password'] = bcrypt($request->password);
 
         Customer::create($data);
 
