@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
@@ -24,6 +25,7 @@ class DatabaseSeeder extends Seeder
             CustomerSeeder::class,
             FloorSeeder::class,
             RoomtypeSeeder::class,
+            UserSeeder::class,
         ]);
     }
 }

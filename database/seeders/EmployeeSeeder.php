@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Models\User;
 use App\Models\Employee;
 use Illuminate\Database\Seeder;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
@@ -15,10 +16,16 @@ class EmployeeSeeder extends Seeder
      */
     public function run()
     {
+        User::create([
+            'email' => 'employee@employee.com',
+            'password' => bcrypt('password'),
+            'role' => 'Employee',
+        ]);
+
         Employee::create([
-            'firstname' => 'Bibas',
-            'lastname' => 'Ghimire',
-            'email' => 'bibas.ghimire@gmail.com',
+            'firstname' => 'Employee',
+            'lastname' => 'Detail',
+            'email' => 'employee@employee.com',
             'password' => bcrypt('password'),
             'dob' => '2007/10/12',
             'phone' => '1414142536',
@@ -32,43 +39,7 @@ class EmployeeSeeder extends Seeder
             'joining_date' => '2075/2/14',
             'salary' => '5000',
             'shift_id' => '1',
-        ]);
-
-        Employee::create([
-            'firstname' => 'Samer',
-            'lastname' => 'Chettri',
-            'email' => 'samir.chettri@gmail.com',
-            'password' => bcrypt('password'),
-            'dob' => '2020/10/12',
-            'phone' => '1414464646',
-            'department_id' => '1',
-            'role_id' => '2',
-            'designation' => 'Mr',
-            'address' => 'Gaindakot 6,Nawalpur',
-            'image' => 'images/employees/cKRYW8MdDAT9rOIGmcSN.jpg',
-            'citizenship_number' => '12-4545-12457895',
-            'pan_number' => '45454785',
-            'joining_date' => '2075/2/14',
-            'salary' => '10000',
-            'shift_id' => '2',
-        ]);
-        Employee::create([
-            'firstname' => 'Dipendra',
-            'lastname' => 'Sapkota',
-            'email' => 'dipendra.sapkota@gmail.com',
-            'password' => bcrypt('password'),
-            'dob' => '2020/10/12',
-            'phone' => '7894561230',
-            'department_id' => '1',
-            'role_id' => '2',
-            'designation' => 'Mr',
-            'address' => 'Gaindakot 8,Nawalpur',
-            'image' => 'images/employees/GR5OtvcDelPQ1ZoGp2ka.jpg',
-            'citizenship_number' => '12-4545-12457895',
-            'pan_number' => '45454785',
-            'joining_date' => '2075/2/14',
-            'salary' => '10000',
-            'shift_id' => '1',
+            'user_id' => '1',
         ]);
     }
 }
