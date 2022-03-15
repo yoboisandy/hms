@@ -80,13 +80,13 @@ class HallController extends Controller
         $data = $request->validate([
             'name' => ['required', 'unique:halls,name', 'alpha'],
             'description' => ['required'],
-            'base_occupancy' => ['required_with:high_occupancy', 'min:1', 'integer', 'gt:0'],
-            'high_occupancy' => ['required_with:base_occupancy', 'min:2', 'integer', 'gt:0'],
+            'base_occupancy' => ['bail', 'required_with:high_occupancy', 'integer', 'gt:0', 'min:1'],
+            'high_occupancy' => ['bail', 'required_with:base_occupancy', 'integer', 'gte:base_occupancy', 'min:2'],
             'amenity_id' => ['required', 'exists:amenities,id'],
             'floor_id' => ['required', 'exists:floors,id'],
             'image' => ['required', 'image', 'mimes:jpg,jpeg,png'],
-            'base_price' => ['required', 'integer', 'min:1', 'gt:0'],
-            'high_price' => ['required', 'integer', 'min:2', 'gt:0'],
+            'base_price' => ['bail', 'required_with:high_price', 'integer', 'gt:0', 'min:1'],
+            'high_price' => ['bail', 'required_with:base_price', 'integer', 'gte:base_price', 'min:2'],
             'amenities' => ['required', 'array'],
             'amenities.*' => ['exists:amenities,id'],
         ]);
