@@ -19,6 +19,10 @@ return new class extends Migration
             $table->string('role')->default('Customer');
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
+            $table->string('api_token')
+                ->unique()
+                ->nullable()
+                ->default(Null);
             $table->rememberToken();
             $table->timestamps();
         });
