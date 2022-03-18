@@ -50,10 +50,6 @@ class AuthController extends Controller
 
         $role = User::where('email', $request['email'])->get('role')->firstOrFail();
 
-        $api_token = User::where('email', $request['email'])->get('api_token')->firstOrFail();
-
-        $api_token = $token;
-
         return response()->json([
             'access_token' => $token,
             'token_type' => 'Bearer',
