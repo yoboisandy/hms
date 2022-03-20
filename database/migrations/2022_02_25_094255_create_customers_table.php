@@ -22,6 +22,7 @@ return new class extends Migration
             $table->string('address');
             $table->string('citizenship_number');
             $table->string('password');
+            $table->foreignId('user_id');
             $table->timestamps();
         });
     }

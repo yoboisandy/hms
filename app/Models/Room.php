@@ -20,4 +20,14 @@ class Room extends Model
     {
         return $this->belongsTo(Roomtype::class);
     }
+
+    public function customer()
+    {
+        return $this->belongsToMany(Customer::class);
+    }
+
+    public function book()
+    {
+        return $this->belongsTo(Book::class);
+    }
 }

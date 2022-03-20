@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Models\User;
 use App\Models\Customer;
 use Illuminate\Database\Seeder;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
@@ -15,6 +16,12 @@ class CustomerSeeder extends Seeder
      */
     public function run()
     {
+        User::create([
+            'email' => 'customer@customer.com',
+            'password' => bcrypt('password'),
+            'role' => 'Customer',
+        ]);
+
         Customer::create([
             'firstname' => 'Asim',
             'lastname' => 'Poudel',
@@ -23,26 +30,7 @@ class CustomerSeeder extends Seeder
             'address' => 'Gaindakot',
             'citizenship_number' => '1-1-24515',
             'password' => bcrypt('password'),
-        ]);
-
-        Customer::create([
-            'firstname' => 'Sandeep',
-            'lastname' => 'Sharma',
-            'email' => 'sash@customer.com',
-            'phone' => '7894578430',
-            'address' => 'Bharatpur-12',
-            'citizenship_number' => '1-2-24515',
-            'password' => bcrypt('password')
-        ]);
-
-        Customer::create([
-            'firstname' => 'Sujan',
-            'lastname' => 'Maskey',
-            'email' => 'suku@customer.com',
-            'phone' => '7894561650',
-            'address' => 'Nepalgunj',
-            'citizenship_number' => '1-1-24515',
-            'password' => bcrypt('password'),
+            'user_id' => '2',
         ]);
     }
 }
