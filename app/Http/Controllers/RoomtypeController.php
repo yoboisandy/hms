@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Roomtype;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 
 class RoomtypeController extends Controller
@@ -30,22 +31,25 @@ class RoomtypeController extends Controller
      */
     public function store(Request $request)
     {
+        // return response()->json($request->all());
 
 
         $data = $request->validate([
-            'type_name' => ['required', 'unique:roomtypes,type_name', 'alpha'],
+            'type_name' => ['required', 'unique:roomtypes,type_name'],
             'description' => ['nullable'],
             'adult_occupancy' => ['required', 'integer', 'gt:0'],
             'child_occupancy' => ['required', 'integer', 'gt:0'],
-            'image' => ['image', 'mimes:png,jpg'],
+            'image' => ['image', 'mimes:png,jpg,webp'],
             'base_occupancy' => ['required_with:higher_occupancy', 'min:1', 'integer', 'gt:0'],
             'higher_occupancy' => ['required_with:base_occupancy', 'min:2', 'integer', 'gt:0'],
-            'extra_bed' => ['bail', 'required_with:extra_bed_price', 'integer', 'gt:0'],
+            // 'extra_bed' => ['bail', 'required_with:extra_bed_price', 'integer', 'gt:0'],
+            'extra_bed' => ['bail',  'integer'],
             'base_price' => ['required', 'integer', 'gt:0'],
             'additional_price' => ['required', 'integer', 'gt:0'],
-            'extra_bed_price' => ['bail', 'required_with:extra_bed', 'integer', 'gt:0'],
+            // 'extra_bed_price' => ['bail', 'required_with:extra_bed', 'integer', 'gt:0'],
+            'extra_bed_price' => ['bail', 'integer', 'gt:0'],
             'amenities' => ['required', 'array'],
-            'amenities.*' => ['exists:amenities,id'],
+            // 'amenities.*' => ['exists:amenities,id'],
         ]);
 
         if ($request->file('image')) {
@@ -57,8 +61,10 @@ class RoomtypeController extends Controller
             $data['image'] = "images/roomtypes/" . $name;
         }
 
-        $roomtype = Roomtype::create($data);
-        $roomtype->amenities()->sync($request->amenities);
+        DB::transaction(function () use ($request, $data) {
+            $roomtype = Roomtype::create($data);
+            $roomtype->amenities()->sync($request->amenities);
+        });
 
 
         return response()->json(["message" => "Room Type Added Successsfully"]);
@@ -72,6 +78,7 @@ class RoomtypeController extends Controller
      */
     public function show(Roomtype $roomtype)
     {
+        $roomtype->load('amenities');
         return response()->json($roomtype);
     }
 
