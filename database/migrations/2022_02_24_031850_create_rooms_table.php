@@ -21,7 +21,8 @@ return new class extends Migration
             $table->string('price');
             $table->string('description');
             $table->foreignId('roomtype_id', 'exists:roomtypes,id');
-
+            $table->foreignId('user_id')->nullable();
+            $table->string('status')->default('available');
             $table->timestamps();
         });
     }
