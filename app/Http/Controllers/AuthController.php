@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\User;
+use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
@@ -46,19 +47,21 @@ class AuthController extends Controller
 
         $user = User::where('email', $request['email'])->firstOrFail();
 
-        $token = $user->createToken('bearer_token')->plainTextToken;
+        $token = $user->createToken('auth_token')->plainTextToken;
 
         $role = User::where('email', $request['email'])->get('role')->firstOrFail();
 
         return response()->json([
             'access_token' => $token,
             'token_type' => 'Bearer',
-            'Role' => $role->role,
-
+            'role' => $role->role,
+            'user' => Auth::user(),
         ]);
     }
-    public function me(Request $request)
+    public function logout()
     {
-        return $request->user();
+        auth()->user()->tokens()->delete();
+
+        return response()->json(['message' => 'You have successfully logged out and the token was successfully deleted']);
     }
 }

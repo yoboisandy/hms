@@ -24,11 +24,14 @@ use Illuminate\Support\Facades\Route;
 // });
 Route::post('/register', [App\Http\Controllers\AuthController::class, 'register']);
 Route::post('/login', [\App\Http\Controllers\AuthController::class, 'login']);
-Route::post('/logout', [App\Http\Controllers\AuthController::class, 'logout']);
 
-Route::middleware(['auth:sanctum'])->group(function () {
+Route::middleware(['auth:sanctum', 'isCustomer'])->group(function () {
+    Route::get('/viewrooms', [App\Http\Controllers\RoomController::class, 'index']);
+    Route::post('/book-room', [App\Http\Controllers\BookController::class, 'store']);
+    Route::post('/logout', [App\Http\Controllers\AuthController::class, 'logout']);
+});
 
-    Route::get('me', [\App\Http\Controllers\AuthController::class, 'me']);
+Route::middleware(['auth:sanctum', 'isAdmin'])->group(function () {
 
     Route::apiResource('shifts', \App\Http\Controllers\ShiftController::class);
 
@@ -53,11 +56,13 @@ Route::middleware(['auth:sanctum'])->group(function () {
     Route::apiResource('customers', \App\Http\Controllers\CustomerController::class);
 
     Route::get('/count', [\App\Http\Controllers\CountController::class, 'countAll']);
+
+    Route::post('/logout', [App\Http\Controllers\AuthController::class, 'logout']);
 });
 
-Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
-    return $request->user();
-});
+
+
+
 
 
 
