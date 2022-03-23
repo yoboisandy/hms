@@ -22,13 +22,19 @@ use Illuminate\Support\Facades\Route;
 
 //     return ['token' => $token->plainTextToken];
 // });
-Route::post('/register', [App\Http\Controllers\AuthController::class, 'register']);
-Route::post('/login', [\App\Http\Controllers\AuthController::class, 'login']);
 
-Route::middleware(['auth:sanctum', 'isCustomer'])->group(function () {
-    Route::get('/viewrooms', [App\Http\Controllers\RoomController::class, 'index']);
+Route::get('/viewroomtypes', [App\Http\Controllers\RoomtypeController::class, 'index']);
+
+Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
+    return $request->user();
+});
+
+Route::post('/register', [App\Http\Controllers\AuthController::class, 'register']);
+Route::post('/login', [App\Http\Controllers\AuthController::class, 'login']);
+Route::post('/logout', [App\Http\Controllers\AuthController::class, 'logout']);
+
+Route::middleware(['auth:sanctum'])->group(function () {
     Route::post('/book-room', [App\Http\Controllers\BookController::class, 'store']);
-    Route::post('/logout', [App\Http\Controllers\AuthController::class, 'logout']);
 });
 
 Route::middleware(['auth:sanctum', 'isAdmin'])->group(function () {
@@ -49,15 +55,13 @@ Route::middleware(['auth:sanctum', 'isAdmin'])->group(function () {
 
     Route::apiResource('halls', \App\Http\Controllers\HallController::class);
 
-    Route::apiResource('roomtypes', \App\Http\Controllers\RoomTypeController::class);
+    Route::apiResource('roomtypes', \App\Http\Controllers\RoomTypeController::class)->except('index');
 
     Route::apiResource('rooms', \App\Http\Controllers\RoomController::class);
 
     Route::apiResource('customers', \App\Http\Controllers\CustomerController::class);
 
     Route::get('/count', [\App\Http\Controllers\CountController::class, 'countAll']);
-
-    Route::post('/logout', [App\Http\Controllers\AuthController::class, 'logout']);
 });
 
 

@@ -17,6 +17,7 @@ class CustomerSeeder extends Seeder
     public function run()
     {
         User::create([
+            "name" => "Asim Poudel",
             'email' => 'customer@customer.com',
             'password' => bcrypt('password'),
             'role' => 'Customer',
