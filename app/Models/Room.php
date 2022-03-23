@@ -26,8 +26,8 @@ class Room extends Model
         return $this->belongsToMany(Customer::class);
     }
 
-    public function book()
-    {
-        return $this->belongsTo(Book::class);
-    }
+    // public function book()
+    // {
+    //     return $this->belongsTo(Book::class);
+    // }
 }

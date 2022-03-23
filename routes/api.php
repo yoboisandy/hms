@@ -5,30 +5,14 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
 
-/*
-|--------------------------------------------------------------------------
-| API Routes
-|--------------------------------------------------------------------------
-|
-| Here is where you can register API routes for your application. These
-| routes are loaded by the RouteServiceProvider within a group which
-| is assigned the "api" middleware group. Enjoy building your API!
-|
-*/
-
-
-// Route::post('/tokens/create', function (Request $request) {
-//     $token = $request->user()->createToken($request->token_name);
-
-//     return ['token' => $token->plainTextToken];
-// });
 Route::post('/register', [App\Http\Controllers\AuthController::class, 'register']);
 Route::post('/login', [\App\Http\Controllers\AuthController::class, 'login']);
+Route::post('/logout', [App\Http\Controllers\AuthController::class, 'logout']);
 
 Route::middleware(['auth:sanctum', 'isCustomer'])->group(function () {
-    Route::get('/viewrooms', [App\Http\Controllers\RoomController::class, 'index']);
+    Route::get('/viewrooms', [App\Http\Controllers\RoomtypeController::class, 'viewRoom']);
     Route::post('/book-room', [App\Http\Controllers\BookController::class, 'store']);
-    Route::post('/logout', [App\Http\Controllers\AuthController::class, 'logout']);
+    Route::get('/viewhalls', [App\Http\Controllers\HallController::class, 'index']);
 });
 
 Route::middleware(['auth:sanctum', 'isAdmin'])->group(function () {
@@ -56,15 +40,6 @@ Route::middleware(['auth:sanctum', 'isAdmin'])->group(function () {
     Route::apiResource('customers', \App\Http\Controllers\CustomerController::class);
 
     Route::get('/count', [\App\Http\Controllers\CountController::class, 'countAll']);
-
-    Route::post('/logout', [App\Http\Controllers\AuthController::class, 'logout']);
 });
-
-
-
-
-
-
-
 
 Route::apiResource('users', \App\Http\Controllers\UserController::class);

@@ -27,6 +27,7 @@ class DatabaseSeeder extends Seeder
             RoomtypeSeeder::class,
             UserSeeder::class,
             RoomSeeder::class,
+            HallSeeder::class,
         ]);
     }
 }
