@@ -62,6 +62,7 @@ class EmployeeController extends Controller
 
         $data['password'] = bcrypt($request->password);
         $user = User::create([
+            'name' => $data['firstname'] . " " . $data['lastname'],
             'email' => $data['email'],
             'password' => $data['password'],
             'role' => 'Employee',

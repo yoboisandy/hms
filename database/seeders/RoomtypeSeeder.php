@@ -15,11 +15,12 @@ class RoomtypeSeeder extends Seeder
      */
     public function run()
     {
-        Roomtype::create([
-            'type_name' => 'Deluxe',
+        $data = Roomtype::create([
+            'type_name' => 'Deluxe Room',
+            'description' => "Lorem ipsum dolor sit amet consectetur adipisicing elit. Vel quis fuga molestias et laboriosam vitae nulla quasi earum neque ratione? Tempora, accusantium aspernatur. Laudantium commodi sequi rerum hic amet alias? Dolores quibusdam consequuntur velit, veritatis doloremque rem deleniti repellat, quas sunt expedita dicta porro qui sapiente eum, tempora non similique!",
             'adult_occupancy' => '2',
             'child_occupancy' => '2',
-            'image' => 'images/amenities/RECBzrohMPpEKBMnlDyS8cNr0SK02v.jpg',
+            'image' => 'images/roomtypes/TH6rvn6VgqyOQsNcBRJlHjb1wYRp0C.webp',
             'base_occupancy' => '2',
             'higher_occupancy' => '4',
             'extra_bed' => 1,
@@ -27,11 +28,13 @@ class RoomtypeSeeder extends Seeder
             'additional_price' => '2500',
             'extra_bed_price' => '1000'
         ]);
-        Roomtype::create([
-            'type_name' => 'Super Deluxe',
+        $data->amenities()->sync([1, 2, 3, 5, 7]);
+        $data = Roomtype::create([
+            'type_name' => 'Super Deluxe Room',
+            'description' => "Lorem ipsum dolor sit amet consectetur adipisicing elit. Vel quis fuga molestias et laboriosam vitae nulla quasi earum neque ratione? Tempora, accusantium aspernatur. Laudantium commodi sequi rerum hic amet alias? Dolores quibusdam consequuntur velit, veritatis doloremque rem deleniti repellat, quas sunt expedita dicta porro qui sapiente eum, tempora non similique!",
             'adult_occupancy' => '2',
             'child_occupancy' => '2',
-            'image' => 'images/amenities/RECBzrohMPpEKBMnlDyS8cNr0SK02v.jpg',
+            'image' => 'images/roomtypes/xAcEoknkereFInDUKfJxhQvLyoEJgh.webp',
             'base_occupancy' => '2',
             'higher_occupancy' => '4',
             'extra_bed' => 1,
@@ -39,11 +42,13 @@ class RoomtypeSeeder extends Seeder
             'additional_price' => '2500',
             'extra_bed_price' => '1000'
         ]);
-        Roomtype::create([
-            'type_name' => 'Standard',
+        $data->amenities()->sync([2, 3, 4]);
+        $data = Roomtype::create([
+            'type_name' => 'Standard Room',
+            'description' => "Lorem ipsum dolor sit amet consectetur adipisicing elit. Vel quis fuga molestias et laboriosam vitae nulla quasi earum neque ratione? Tempora, accusantium aspernatur. Laudantium commodi sequi rerum hic amet alias? Dolores quibusdam consequuntur velit, veritatis doloremque rem deleniti repellat, quas sunt expedita dicta porro qui sapiente eum, tempora non similique!",
             'adult_occupancy' => '2',
             'child_occupancy' => '2',
-            'image' => 'images/amenities/RECBzrohMPpEKBMnlDyS8cNr0SK02v.jpg',
+            'image' => 'images/roomtypes/TH6rvn6VgqyOQsNcBRJlHjb1wYRp0C.webp',
             'base_occupancy' => '2',
             'higher_occupancy' => '4',
             'extra_bed' => 1,
@@ -51,5 +56,6 @@ class RoomtypeSeeder extends Seeder
             'additional_price' => '2500',
             'extra_bed_price' => '1000'
         ]);
+        $data->amenities()->sync([2, 3, 7]);
     }
 }
