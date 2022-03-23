@@ -10,10 +10,17 @@ Route::post('/login', [\App\Http\Controllers\AuthController::class, 'login']);
 Route::post('/logout', [App\Http\Controllers\AuthController::class, 'logout']);
 
 Route::middleware(['auth:sanctum', 'isCustomer'])->group(function () {
-    Route::get('/viewrooms', [App\Http\Controllers\RoomtypeController::class, 'viewRoom']);
     Route::post('/book-room', [App\Http\Controllers\BookController::class, 'store']);
-    Route::get('/viewhalls', [App\Http\Controllers\HallController::class, 'index']);
 });
+
+
+Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
+    return $request->user();
+});
+Route::get('/viewroomtypes', [App\Http\Controllers\RoomtypeController::class, 'index']);
+Route::get('/viewhalls', [App\Http\Controllers\HallController::class, 'index']);
+
+
 
 Route::middleware(['auth:sanctum', 'isAdmin'])->group(function () {
 
@@ -33,7 +40,7 @@ Route::middleware(['auth:sanctum', 'isAdmin'])->group(function () {
 
     Route::apiResource('halls', \App\Http\Controllers\HallController::class);
 
-    Route::apiResource('roomtypes', \App\Http\Controllers\RoomTypeController::class);
+    Route::apiResource('roomtypes', \App\Http\Controllers\RoomTypeController::class)->except('index');
 
     Route::apiResource('rooms', \App\Http\Controllers\RoomController::class);
 

@@ -58,11 +58,20 @@ class AuthController extends Controller
             'user' => Auth::user(),
         ]);
     }
+<<<<<<< HEAD
+=======
+
+>>>>>>> c1f101aaa7856649c1551a3d8d1630a468a66d13
     public function logout(Request $request)
     {
         if (!empty($request->token) && auth()->user()) {
             auth()->user()->tokens()->where('id', $request->token)->delete();
         }
+<<<<<<< HEAD
+=======
+
+
+>>>>>>> c1f101aaa7856649c1551a3d8d1630a468a66d13
         return response()->json(['message' => 'You have successfully logged out and the token was successfully deleted']);
     }
 }

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Room;
+use App\Models\Roomtype;
 use Illuminate\Auth\Events\Validated;
 use Illuminate\Http\Request;
 
@@ -18,6 +19,7 @@ class RoomController extends Controller
         $data = Room::with(['roomtype', 'floor'])->get();
         return response()->json($data);
     }
+
 
     /**
      * Store a newly created resource in storage.

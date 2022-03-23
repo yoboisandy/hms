@@ -21,11 +21,11 @@ class DatabaseSeeder extends Seeder
             DepartmentSeeder::class,
             ShiftSeeder::class,
             HousekeepingSeeder::class,
+            UserSeeder::class,
             EmployeeSeeder::class,
             CustomerSeeder::class,
             FloorSeeder::class,
             RoomtypeSeeder::class,
-            UserSeeder::class,
             RoomSeeder::class,
             HallSeeder::class,
         ]);

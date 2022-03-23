@@ -17,6 +17,7 @@ class EmployeeSeeder extends Seeder
     public function run()
     {
         User::create([
+            'name' => 'Employee Employee',
             'email' => 'employee@employee.com',
             'password' => bcrypt('password'),
             'role' => 'Employee',
@@ -24,7 +25,7 @@ class EmployeeSeeder extends Seeder
 
         Employee::create([
             'firstname' => 'Employee',
-            'lastname' => 'Detail',
+            'lastname' => 'Employee',
             'email' => 'employee@employee.com',
             'password' => bcrypt('password'),
             'dob' => '2007/10/12',
