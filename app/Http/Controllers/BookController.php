@@ -53,11 +53,18 @@ class BookController extends Controller
         $book_room = Book::where('room_id', "=", $data['room_id'])->get();
         $count_book_room = $book_room->count();
 
+        // return $count_book_room;
 
         $booking_rooms = Book::whereBetween('start_date', [$start_date, $end_date])
             ->orWhereBetween('end_date', [$start_date, $end_date])
             ->get();
+
         $count_booking_rooms = $booking_rooms->count();
+        // return $count_booking_rooms;
+
+        $room_available = $count_room - $count_booking_rooms;
+        return $room_available;
+
 
         // return $count_booking_rooms;
         // return $count_room;
