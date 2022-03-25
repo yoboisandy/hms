@@ -20,7 +20,7 @@ return new class extends Migration
             $table->string('capacity');
             $table->string('price');
             $table->string('description');
-            $table->foreignId('roomtype_id', 'exists:roomtypes,id');
+            $table->foreignId('roomtype_id', 'exists:roomtypes,id')->constrained();
             $table->string('status')->default('available');
             $table->timestamps();
         });

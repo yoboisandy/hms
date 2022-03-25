@@ -11,6 +11,7 @@ Route::post('/logout', [App\Http\Controllers\AuthController::class, 'logout']);
 
 Route::middleware(['auth:sanctum', 'isCustomer'])->group(function () {
     Route::post('/book-room', [App\Http\Controllers\BookController::class, 'store']);
+    Route::post('/book-hall', [App\Http\Controllers\HallbookController::class, 'store']);
 });
 
 
