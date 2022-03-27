@@ -34,5 +34,41 @@ class RoomSeeder extends Seeder
             'roomtype_id' => '2',
             'status' => 'pending',
         ]);
+        Room::create([
+            'room_no' => '102',
+            'floor_id' => '3',
+            'capacity' => '4',
+            'price' => '50000',
+            'description' => 'This is best of the best room!',
+            'roomtype_id' => '3',
+            'status' => 'pending',
+        ]);
+        Room::create([
+            'room_no' => '103',
+            'floor_id' => '3',
+            'capacity' => '4',
+            'price' => '50000',
+            'description' => 'This is best of the best room!',
+            'roomtype_id' => '4',
+            'status' => 'pending',
+        ]);
+        Room::create([
+            'room_no' => '104',
+            'floor_id' => '3',
+            'capacity' => '4',
+            'price' => '50000',
+            'description' => 'This is best of the best room!',
+            'roomtype_id' => '3',
+            'status' => 'pending',
+        ]);
+        Room::create([
+            'room_no' => '105',
+            'floor_id' => '3',
+            'capacity' => '4',
+            'price' => '50000',
+            'description' => 'This is best of the best room!',
+            'roomtype_id' => '3',
+            'status' => 'pending',
+        ]);
     }
 }

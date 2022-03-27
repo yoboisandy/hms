@@ -8,7 +8,8 @@ use App\Models\Roomtype;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Auth;
-
+use phpDocumentor\Reflection\Types\Boolean;
+use Psr\Http\Message\ResponseInterface;
 
 class BookController extends Controller
 {
@@ -19,7 +20,8 @@ class BookController extends Controller
      */
     public function index()
     {
-        //
+        $room = Book::all();
+        return response()->json($room);
     }
 
     /**
@@ -31,68 +33,41 @@ class BookController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            // 'room_id' => ['exists:rooms,id'],
-            'start_date' => ['bail',  'required_with:end_date', 'after_or_equal:' . now(),  'date', 'before_or_equal:end_date'],
-            'end_date' => ['bail', 'required_with:start_date', 'date', 'after_or_equal:start_date'],
+            'room_req' => ['required', 'gte:1'],
+            'start_date' => ['bail', 'required',  'required_with:end_date', 'after_or_equal:' . now(),  'date', 'before_or_equal:end_date'],
+            'end_date' => ['bail', 'required', 'required_with:start_date', 'date', 'after_or_equal:start_date'],
             'roomtype_id' => ['required'],
         ]);
         $start_date = Carbon::parse($request->start_date);
         $end_date = Carbon::parse($request->end_date);
-        $data = ['user_id' => Auth::user()->id, 'room_id' => $request->room_id, 'roomtype_id' => $request->roomtype_id,];
+        $data = ['user_id' => Auth::user()->id, 'room_id' => $request->room_id, 'roomtype_id' => $request->roomtype_id, 'room_req' => $request->room_req,];
         $data['start_date'] = $start_date;
         $data['end_date'] = $end_date;
-
         //Counting room
-        $room = Room::where('roomtype_id', '=', $data['roomtype_id'])->get();
-        $count_room = $room->count();
-
-        // $roomtype = Book::where('roomtype_id', "=", $data['roomtype_id'])->get();
-        // $count_roomtype = Roomtype::where('id', "=", $data['roomtype_id'])->get('type_name');
-
-        //counting booked room from booking table
-        $book_room = Book::where('room_id', "=", $data['room_id'])->get();
-        $count_book_room = $book_room->count();
-
-
-        $booking_rooms = Book::whereBetween('start_date', [$start_date, $end_date])
-            ->orWhereBetween('end_date', [$start_date, $end_date])
-            ->get();
-        $count_booking_rooms = $booking_rooms->count();
-
-        // return $count_booking_rooms;
-        // return $count_room;
-
-        if (($count_room - $count_book_room) > 0) {
-            Book::create($data);
-            return response()->json(['message' => 'Room booked Sucessfully']);
-        } else {
-            if (($count_room - $count_booking_rooms) > 0) {
-                Book::create($data);
-                return response()->json(['message' => 'Room booked Sucessfully']);
-            }
-        }
-
-
-
-
-
+        $room = Room::where('roomtype_id', '=', $data['roomtype_id'])->count();
+        // return $room;
         // return $count_book_room;
-        // return $count_roomtype;
-
-        // $booking_rooms = Book::whereBetween('start_date', [$start_date, $end_date])
-        //     ->orWhereBetween('end_date', [$start_date, $end_date])
-        //     ->get()
-        //     ->pluck('room_id')
-        //     ->toArray();
-        // if (in_array($request->room_id, $booking_rooms)) {
-        //     die("Room not available");
-        // }
-
+        $booking_rooms = Book::where('roomtype_id', $request->roomtype_id)
+            ->whereBetween('start_date', [$start_date, $end_date])
+            ->whereBetween('end_date', [$start_date, $end_date])
+            ->get()
+            ->pluck('roomtype_id')
+            ->count();
         // return $booking_rooms;
 
 
-        // Book::create($data);
-        return response()->json(['message' => 'Sorry this type of room cannot be booked due to housefull']);
+        $room_available = $room - $booking_rooms;
+        // return $room_available;
+        if ($room_available < $data['room_req']) {
+            return response()->json(['message' => $room_available . ' room available!!!']);
+        }
+        if ($room_available == 0) {
+            return response()->json(['message' => 'no room available']);
+        } else {
+            Book::create($data);
+            $room_available = $room_available - $data['room_req'];
+            return response()->json(['message' => 'Room booked Sucessfully']);
+        }
     }
 
     /**

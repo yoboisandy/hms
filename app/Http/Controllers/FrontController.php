@@ -2,8 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Book;
+use App\Models\Room;
 use App\Models\Roomtype;
 use Illuminate\Http\Request;
+use Illuminate\Support\Carbon;
 
 class FrontController extends Controller
 {
@@ -11,5 +14,37 @@ class FrontController extends Controller
     {
         $roomTypes = Roomtype::with('amenities')->get();
         return response()->json($roomTypes);
+    }
+
+    public function roomAvailability(Request $request)
+    {
+        $request->validate([
+            'start_date' => ['bail', 'required',  'required_with:end_date', 'after_or_equal:' . now(),  'date', 'before_or_equal:end_date',],
+            'end_date' => ['bail', 'required', 'required_with:start_date', 'date', 'after_or_equal:start_date',],
+            'roomtype_id' => ['required',],
+        ]);
+        $start_date = Carbon::parse($request->start_date);
+        $end_date = Carbon::parse($request->end_date);
+        $data['roomtype_id'] = $request->roomtype_id;
+        $data['start_date'] = $start_date;
+        $data['end_date'] = $end_date;
+
+        $room = Room::where('roomtype_id', '=', $data['roomtype_id'])->count();
+        // return $room;
+        // $booking_rooms = Book::where('roomtype_id', $request->roomtype_id)
+        //     ->get()
+        //     ->count();
+        // return $booking_rooms;
+        $book_date = Book::where('roomtype_id', '=', $data['roomtype_id'])
+            ->where('start_date', [$start_date])
+            ->Where('end_date', [$start_date])
+            ->get()
+            ->count();
+        // return $book_date;
+
+        $room_available = $room - $book_date;
+        // return $room_available;
+
+        return $room_available;
     }
 }

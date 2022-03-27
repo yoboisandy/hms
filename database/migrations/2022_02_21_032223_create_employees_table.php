@@ -31,7 +31,7 @@ return new class extends Migration
             $table->date('joining_date');
             $table->string('salary');
             $table->foreignId('shift_id')->constrained();
-            $table->foreignId('user_id');
+            $table->foreignId('user_id')->constrained();
             $table->timestamps();
         });
     }
