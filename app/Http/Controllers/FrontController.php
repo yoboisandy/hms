@@ -43,8 +43,14 @@ class FrontController extends Controller
         // return $book_date;
 
         $room_available = $room - $book_date;
-        // return $room_available;
-
-        return $room_available;
+        if ($room_available > 0) {
+            $room = Roomtype::find($data['roomtype_id']);
+            $room->load('amenities');
+            return response()->json([$room]);
+        } else {
+            return response()->json([
+                "message" => "No room available for your search",
+            ]);
+        }
     }
 }
