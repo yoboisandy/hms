@@ -13,6 +13,11 @@ Route::middleware(['auth:sanctum', 'isCustomer'])->group(function () {
     Route::post('/book-room', [App\Http\Controllers\BookController::class, 'store']);
     Route::post('/book-hall', [App\Http\Controllers\HallbookController::class, 'store']);
 });
+Route::middleware(['auth:sanctum', 'isFrontoffice'])->group(function () {
+    Route::get('/viewbookings', [App\Http\Controllers\BookController::class, 'index']);
+    // Route::resource('/updatebookings', [App\Http\Controllers\BookController::class, 'update']);
+});
+
 
 
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
@@ -20,6 +25,7 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 });
 Route::get('/viewroomtypes', [App\Http\Controllers\RoomtypeController::class, 'index']);
 Route::get('/viewhalls', [App\Http\Controllers\HallController::class, 'index']);
+Route::post('/viewavailable', [App\Http\Controllers\FrontController::class, 'roomAvailability']);
 
 
 

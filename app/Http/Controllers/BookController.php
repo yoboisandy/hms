@@ -20,7 +20,8 @@ class BookController extends Controller
      */
     public function index()
     {
-        //
+        $room = Book::all();
+        return response()->json($room);
     }
 
     /**
@@ -48,18 +49,23 @@ class BookController extends Controller
         // return $count_book_room;
         $booking_rooms = Book::where('roomtype_id', $request->roomtype_id)
             ->whereBetween('start_date', [$start_date, $end_date])
-            ->orWhereBetween('end_date', [$start_date, $end_date])
+            ->whereBetween('end_date', [$start_date, $end_date])
             ->get()
             ->pluck('roomtype_id')
             ->count();
         // return $booking_rooms;
 
+
         $room_available = $room - $booking_rooms;
         // return $room_available;
+        if ($room_available < $data['room_req']) {
+            return response()->json(['message' => $room_available . ' room available!!!']);
+        }
         if ($room_available == 0) {
             return response()->json(['message' => 'no room available']);
         } else {
             Book::create($data);
+            $room_available = $room_available - $data['room_req'];
             return response()->json(['message' => 'Room booked Sucessfully']);
         }
     }
