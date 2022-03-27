@@ -1,6 +1,7 @@
 <?php
 
-
+use App\Http\Controllers\RoomtypeController;
+use App\Models\Roomtype;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -18,6 +19,10 @@ Route::middleware(['auth:sanctum', 'isFrontoffice'])->group(function () {
     // Route::resource('/updatebookings', [App\Http\Controllers\BookController::class, 'update']);
 });
 
+
+// Route::apiResource('roomtypes', \App\Http\Controllers\RoomTypeController::class)->only(['show']);
+Route::get('/type/{roomtype}', [\App\Http\Controllers\RoomtypeController::class, 'viewTypes']);
+Route::get('/hall/{hall}', [\App\Http\Controllers\HallController::class, 'viewHall']);
 
 
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
@@ -47,7 +52,7 @@ Route::middleware(['auth:sanctum', 'isAdmin'])->group(function () {
 
     Route::apiResource('halls', \App\Http\Controllers\HallController::class);
 
-    Route::apiResource('roomtypes', \App\Http\Controllers\RoomTypeController::class)->except('index');
+    Route::apiResource('roomtypes', \App\Http\Controllers\RoomTypeController::class);
 
     Route::apiResource('rooms', \App\Http\Controllers\RoomController::class);
 
@@ -57,3 +62,6 @@ Route::middleware(['auth:sanctum', 'isAdmin'])->group(function () {
 });
 
 Route::apiResource('users', \App\Http\Controllers\UserController::class);
+// Route::get('/viewroomtypes/{roomtype}', [App\Http\Controllers\RoomtypeController::class, 'show']);
+Route::get('/viewroomtypes', [App\Http\Controllers\RoomtypeController::class, 'index']);
+Route::get('/viewhalls', [App\Http\Controllers\HallController::class, 'index']);

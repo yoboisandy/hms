@@ -34,7 +34,7 @@ class HallController extends Controller
             'description' => ['required'],
             'base_occupancy' => ['bail', 'required_with:high_occupancy', 'integer', 'gt:0', 'min:1'],
             'high_occupancy' => ['bail', 'required_with:base_occupancy', 'integer', 'gte:base_occupancy', 'min:2'],
-            'amenity_id' => ['required', 'exists:amenities,id'],
+            // 'amenity_id' => ['required', 'exists:amenities,id'],
             'floor_id' => ['required', 'exists:floors,id'],
             'image' => ['required', 'image', 'mimes:jpg,jpeg,png'],
             'base_price' => ['bail', 'required_with:high_price', 'integer', 'gt:0', 'min:1'],
@@ -47,7 +47,9 @@ class HallController extends Controller
         $ext = $request->file('image')->extension();
         $image_name = $name . "." . $ext;
 
-        $data['image'] = $request->file('image')->storeAs('public/images/halls', $image_name);
+        $request->file('image')->storeAs('public/images/halls', $image_name);
+        $data['image'] = $data['image'] = "images/halls/" . $image_name;
+
 
         DB::transaction(function () use ($data, $request) {
             $hall = Hall::create($data);
@@ -65,6 +67,7 @@ class HallController extends Controller
      */
     public function show(Hall $hall)
     {
+        $hall->load('amenities');
         return response()->json($hall);
     }
 
@@ -116,5 +119,12 @@ class HallController extends Controller
         $hall->delete();
 
         return response()->json(['message' => 'Hall deleted sucessfully']);
+    }
+
+    public function viewHall(Hall $hall)
+    {
+        $hall->load('amenities');
+
+        return response()->json($hall);
     }
 }

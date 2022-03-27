@@ -79,6 +79,7 @@ class RoomtypeController extends Controller
     public function show(Roomtype $roomtype)
     {
         $roomtype->load('amenities');
+
         return response()->json($roomtype);
     }
 
@@ -134,5 +135,12 @@ class RoomtypeController extends Controller
 
         $roomtype->delete();
         return response()->json(["message" => "Room Type Deleted Successfully"]);
+    }
+
+    public function viewTypes(Roomtype $roomtype)
+    {
+        $roomtype->load('amenities');
+
+        return response()->json($roomtype);
     }
 }
