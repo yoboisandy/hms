@@ -31,13 +31,10 @@ class FrontController extends Controller
 
         $room = Room::where('roomtype_id', '=', $data['roomtype_id'])->count();
         // return $room;
-        // $booking_rooms = Book::where('roomtype_id', $request->roomtype_id)
-        //     ->get()
-        //     ->count();
-        // return $booking_rooms;
+
         $book_date = Book::where('roomtype_id', '=', $data['roomtype_id'])
-            ->where('start_date', [$start_date])
-            ->Where('end_date', [$start_date])
+            ->Where('start_date', [$start_date])
+            ->Where('end_date', [$end_date])
             ->get()
             ->count();
         // return $book_date;

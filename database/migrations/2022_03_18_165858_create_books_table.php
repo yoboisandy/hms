@@ -16,7 +16,7 @@ return new class extends Migration
         Schema::create('books', function (Blueprint $table) {
             $table->id();
             $table->foreignId('user_id', 'exists:users,id')->constrained();
-            $table->foreignId('room_id', 'exists:rooms,id')->nullable();
+            $table->foreignId('room_id', 'exists:rooms,id')->nullable()->constrained();
             $table->date('start_date');
             $table->date('end_date');
             $table->string('room_req');

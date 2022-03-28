@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Book;
 use App\Models\Room;
 use App\Models\Roomtype;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Auth;
@@ -88,9 +89,15 @@ class BookController extends Controller
      * @param  \App\Models\Book  $book
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Book $book)
+    public function update(Request $request, Book $book, $id)
     {
-        //
+        $data = $request->validate([
+            'room_id' => ['required', 'exists:rooms,id', 'unique:books,room_id',],
+        ]);
+
+        $book->where('id', '=', $id)->update($data);
+
+        return response()->json(['message' => 'Room allocated to that bookings!!']);
     }
 
     /**
@@ -100,6 +107,10 @@ class BookController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function destroy(Book $book)
+    {
+        //
+    }
+    public function calculate(Book $book, User $user, $id)
     {
         //
     }

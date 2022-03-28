@@ -16,7 +16,8 @@ Route::middleware(['auth:sanctum', 'isCustomer'])->group(function () {
 });
 Route::middleware(['auth:sanctum', 'isFrontoffice'])->group(function () {
     Route::get('/viewbookings', [App\Http\Controllers\BookController::class, 'index']);
-    // Route::resource('/updatebookings', [App\Http\Controllers\BookController::class, 'update']);
+    Route::post('/updatebookings/{id}', [App\Http\Controllers\BookController::class, 'update']);
+    Route::get('/calculate/{id}', [App\Http\Controllers\BookController::class, 'calculate']);
 });
 
 
