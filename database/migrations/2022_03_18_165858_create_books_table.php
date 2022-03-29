@@ -19,7 +19,8 @@ return new class extends Migration
             $table->foreignId('room_id', 'exists:rooms,id')->nullable()->constrained();
             $table->date('start_date');
             $table->date('end_date');
-            $table->string('room_req');
+            $table->string('price');
+            $table->string('status')->default('pending');
             $table->foreignId('roomtype_id', 'exists:roomtypes,id')->constrained();
             $table->timestamps();
         });
