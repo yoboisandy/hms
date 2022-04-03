@@ -3,7 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Models\Book;
+use App\Models\Food;
 use App\Models\Room;
+use App\Models\Order;
 use App\Models\Roomtype;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
@@ -113,7 +115,9 @@ class BookController extends Controller
     }
     public function calculate($id)
     {
-        $room = Book::where('user_id', '=', $id)->sum('price');
-        return "Total price is: " . $room;
+        $room = Book::where('user_id', $id)->where('status', 'checkin')->sum('price');
+        $food = Order::where('user_id', $id)->where('status', 'complete')->sum('price');
+        $price = $food + $room;
+        return "Total price is: " . $price;
     }
 }

@@ -20,4 +20,8 @@ class Customer extends Model
     {
         return $this->belongsToMany(Room::class);
     }
+    public function food()
+    {
+        return $this->belongsToMany(Food::class);
+    }
 }

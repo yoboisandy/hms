@@ -68,5 +68,6 @@ class Kernel extends HttpKernel
         'isCustomer' => \App\Http\Middleware\CustomerMiddleware::class,
         'isEmployee' => \App\Http\Middleware\EmployeeMiddleware::class,
         'isFrontoffice' => \App\Http\Middleware\FrontofficeMiddleware::class,
+        'isKitchen' => \App\Http\Middleware\KitchenMiddleware::class,
     ];
 }
