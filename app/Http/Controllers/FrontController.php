@@ -20,7 +20,7 @@ class FrontController extends Controller
     {
         $request->validate([
             'start_date' => ['bail', 'required',  'required_with:end_date', 'after_or_equal:' . now(),  'date', 'before_or_equal:end_date',],
-            'end_date' => ['bail', 'required', 'required_with:start_date', 'date', 'after_or_equal:start_date',],
+            'end_date' => ['bail', 'required', 'required_with:start_date', 'date', 'after:start_date',],
             'roomtype_id' => ['required',],
         ]);
         $start_date = Carbon::parse($request->start_date);
@@ -35,7 +35,6 @@ class FrontController extends Controller
         $book_date = Book::where('roomtype_id', '=', $data['roomtype_id'])
             ->Where('start_date', [$start_date])
             ->Where('end_date', [$end_date])
-            ->get()
             ->count();
         // return $book_date;
 
