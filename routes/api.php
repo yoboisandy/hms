@@ -13,8 +13,6 @@ Route::apiResource('users', \App\Http\Controllers\UserController::class);
 Route::get('/viewroomtypes', [App\Http\Controllers\RoomtypeController::class, 'index']);
 Route::get('/viewhalls', [App\Http\Controllers\HallController::class, 'index']);
 Route::put('/changestatus/{book}', [BookController::class, 'changeBookingStatus']);
-Route::get('/viewroomtypes', [App\Http\Controllers\RoomtypeController::class, 'index']);
-Route::get('/viewhalls', [App\Http\Controllers\HallController::class, 'index']);
 Route::post('/viewavailable', [App\Http\Controllers\FrontController::class, 'roomAvailability']);
 Route::get('/count', [\App\Http\Controllers\CountController::class, 'countAll']);
 
@@ -28,21 +26,35 @@ Route::post('/logout', [App\Http\Controllers\AuthController::class, 'logout']);
 Route::middleware(['auth:sanctum', 'isCustomer'])->group(function () {
     Route::post('/book-room', [App\Http\Controllers\BookController::class, 'store']);
     Route::post('/book-hall', [App\Http\Controllers\HallbookController::class, 'store']);
+    Route::get('/foodavailables', [App\Http\Controllers\FoodController::class, 'foodAvailables']);
+    Route::post('/order-food', [App\Http\Controllers\OrderController::class, 'order_food']);
     Route::get('/mybookings', [App\Http\Controllers\BookController::class, 'showBookingOfUser']);
 });
+
+
+Route::middleware(['auth:sanctum', 'isKitchen'])->group(function () {
+
+    Route::post('/foods', [App\Http\Controllers\FoodController::class, 'store']);
+
+    Route::post('/foods/{id}', [App\Http\Controllers\FoodController::class, 'update']);
+
+    Route::get('/foodavailable', [App\Http\Controllers\FoodController::class, 'foodAvailable']);
+});
+
 
 // admin & front office
 Route::middleware(['auth:sanctum', 'isAdminOrFront'])->group(function () {
     Route::post('/updatebookings/{id}', [App\Http\Controllers\BookController::class, 'update']);
-    Route::get('/calculate/{id}', [App\Http\Controllers\BookController::class, 'calculate']);
+
     Route::get('/viewbookings', [App\Http\Controllers\BookController::class, 'index']);
+
+    Route::get('/calculate/{id}', [App\Http\Controllers\BookController::class, 'calculate']);
     Route::apiResource('customers', \App\Http\Controllers\CustomerController::class);
     Route::apiResource('halls', \App\Http\Controllers\HallController::class);
-
     Route::apiResource('roomtypes', \App\Http\Controllers\RoomTypeController::class);
-
     Route::apiResource('rooms', \App\Http\Controllers\RoomController::class);
 });
+
 
 // Admin
 Route::middleware(['auth:sanctum', 'isAdmin'])->group(function () {
@@ -62,6 +74,7 @@ Route::middleware(['auth:sanctum', 'isAdmin'])->group(function () {
     Route::apiResource('housekeepings', \App\Http\Controllers\HousekeepingController::class);
 });
 
+Route::apiResource('users', \App\Http\Controllers\UserController::class);
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
