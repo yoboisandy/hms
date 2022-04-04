@@ -33,8 +33,10 @@ class FrontController extends Controller
         // return $room;
 
         $book_date = Book::where('roomtype_id', '=', $data['roomtype_id'])
-            ->Where('start_date', [$start_date])
-            ->Where('end_date', [$end_date])
+            ->whereBetween('start_date', [$start_date, $end_date])
+            ->orWhereBetween('end_date', [$start_date, $end_date])
+            ->where('status', "Confirmed")
+            ->orWhere('status', "Pending")->get()
             ->count();
         // return $book_date;
 

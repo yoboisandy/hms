@@ -67,7 +67,7 @@ class BookController extends Controller
         // return $count_book_room;
         $booking_rooms = Book::where('roomtype_id', $request->roomtype_id)
             ->whereBetween('start_date', [$start_date, $end_date])
-            ->whereBetween('end_date', [$start_date, $end_date])
+            ->orWhereBetween('end_date', [$start_date, $end_date])
             ->get()
             ->pluck('roomtype_id')
             ->count();
@@ -135,8 +135,7 @@ class BookController extends Controller
 
     public function showBookingOfUser()
     {
-        // $bookings = Book::with(['roomtype'])->where('user_id', auth()->user()->id)->get();
-        $bookings = Book::where('user_id', auth()->user()->id)->get();
+        $bookings = Book::orderBy('id', 'desc')->with(['roomtype'])->where('user_id', auth()->user()->id)->get();
         return response()->json($bookings);
     }
 
