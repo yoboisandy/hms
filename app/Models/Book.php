@@ -17,6 +17,10 @@ class Book extends Model
     }
     public function roomtype()
     {
-        return $this->belongsToMany(Roomtype::class);
+        return $this->belongsTo(Roomtype::class);
+    }
+    public function user()
+    {
+        return $this->belongsTo(User::class);
     }
 }

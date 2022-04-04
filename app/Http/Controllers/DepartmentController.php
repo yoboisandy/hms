@@ -66,10 +66,9 @@ class DepartmentController extends Controller
     public function update(Request $request, Department $department)
     {
         $data = $request->validate([
-            'name' => ['required', 'unique:departments,name'],
+            'name' => ['required', 'unique:departments,name,' . $department->id],
             'roles' => ['required', 'array'],
-            'roles.*' => ['exists:roles,id'],
-
+            // 'roles.*' => ['exists:roles,id'],
         ]);
 
         DB::transaction(function () use ($data, $request, $department) {

@@ -18,7 +18,7 @@ class BookController extends Controller
      */
     public function index()
     {
-        $room = Book::all();
+        $room = Book::with(['roomtype', 'user'])->get();
         return response()->json($room);
     }
 
@@ -30,10 +30,24 @@ class BookController extends Controller
      */
     public function store(Request $request, Roomtype $roomtype)
     {
+        $roomt = Roomtype::findOrFail($request->roomtype_id);
+        $rt_base_occupancy = $roomt->base_occupancy;
+        $rt_higher_occupancy = $roomt->higher_occupancy;
+        $rt_child_occupancy = $roomt->child_occupancy;
+        $rt_adult_occupancy = $roomt->adult_occupancy;
+        // $total_request = $request->adult_occupancy + $request->child_occupancy;
+
+
+
+
         $request->validate([
+            // 'room_req' => ['required', 'gte:1'],
             'start_date' => ['bail', 'required',  'required_with:end_date', 'after_or_equal:' . now(),  'date', 'before_or_equal:end_date'],
             'end_date' => ['bail', 'required', 'required_with:start_date', 'date', 'after_or_equal:start_date'],
-            'roomtype_id' => ['required'],
+            // 'roomtype_id' => ['required'],
+            'child_occupancy' => ['required', 'lte:' . $rt_child_occupancy, 'gte:0'],
+            'adult_occupancy' => ['required', 'lte:' . $rt_adult_occupancy, 'gte:0'],
+            'number_of_people' => ['lte:' . $rt_higher_occupancy, 'gte:' . $rt_base_occupancy]
         ]);
         $start_date = Carbon::parse($request->start_date);
         $end_date = Carbon::parse($request->end_date);
@@ -53,7 +67,7 @@ class BookController extends Controller
         // return $count_book_room;
         $booking_rooms = Book::where('roomtype_id', $request->roomtype_id)
             ->whereBetween('start_date', [$start_date, $end_date])
-            ->whereBetween('end_date', [$start_date, $end_date])
+            ->orWhereBetween('end_date', [$start_date, $end_date])
             ->get()
             ->pluck('roomtype_id')
             ->count();
@@ -66,6 +80,8 @@ class BookController extends Controller
         if ($room_available == 0) {
             return response()->json(['message' => 'no room available']);
         } else {
+            // $data['room_id'] = Roomtype::findOrFail($data['roomtype_id'])->room()->first()->id;
+            // return $data['room_id'];
             Book::create($data);
             // $room_available = $room_available - $data['room_req'];
             return response()->json(['message' => 'Room booked Sucessfully']);
@@ -115,5 +131,21 @@ class BookController extends Controller
     {
         $room = Book::where('user_id', '=', $id)->sum('price');
         return "Total price is: " . $room;
+    }
+
+    public function showBookingOfUser()
+    {
+        $bookings = Book::orderBy('id', 'desc')->with(['roomtype'])->where('user_id', auth()->user()->id)->get();
+        return response()->json($bookings);
+    }
+
+    public function changeBookingStatus(Request $request, Book $book)
+    {
+        $book->update([
+            'status' => $request->status
+        ]);
+        return response()->json([
+            'message' => 'Booking Status Updated',
+        ]);
     }
 }
