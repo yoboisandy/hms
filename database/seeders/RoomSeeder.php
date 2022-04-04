@@ -21,7 +21,7 @@ class RoomSeeder extends Seeder
             'capacity' => '3',
             'price' => '10000',
             'description' => 'This is best room!',
-            'roomtype_id' => '3',
+            'roomtype_id' => '1',
             'status' => 'pending',
         ]);
 

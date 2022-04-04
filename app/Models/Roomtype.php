@@ -20,8 +20,8 @@ class Roomtype extends Model
     {
         return $this->hasMany(Room::class);
     }
-    public function roomtype()
-    {
-        return $this->belongsTo(Book::class);
-    }
+    // public function roomtype()
+    // {
+    //     return $this->belongsTo(Book::class);
+    // }
 }

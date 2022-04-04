@@ -42,22 +42,9 @@ class RoomtypeSeeder extends Seeder
             'additional_price' => '2500',
             'extra_bed_price' => '1000'
         ]);
-        $data->amenities()->sync([1, 2, 3, 5]);
-        Roomtype::create([
-            'type_name' => 'Standard',
-            'adult_occupancy' => '1',
-            'child_occupancy' => '1',
-            'image' => 'images/amenities/RECBzrohMPpEKBMnlDyS8cNr0SK02v.jpg',
-            'base_occupancy' => '1',
-            'higher_occupancy' => '1',
-            'extra_bed' => 0,
-            'base_price' => '1500',
-            'additional_price' => '0',
-            'extra_bed_price' => '0'
-        ]);
         $data->amenities()->sync([1, 2,  5, 7]);
         Roomtype::create([
-            'type_name' => 'Normal',
+            'type_name' => 'Normal Room',
             'adult_occupancy' => '2',
             'child_occupancy' => '2',
             'image' => 'images/amenities/RECBzrohMPpEKBMnlDyS8cNr0SK02v.jpg',
@@ -70,7 +57,7 @@ class RoomtypeSeeder extends Seeder
         ]);
         $data->amenities()->sync([1, 4, 3, 5, 7]);
         Roomtype::create([
-            'type_name' => 'Star',
+            'type_name' => 'Star Room',
             'adult_occupancy' => '2',
             'child_occupancy' => '2',
             'image' => 'images/amenities/RECBzrohMPpEKBMnlDyS8cNr0SK02v.jpg',
@@ -83,7 +70,7 @@ class RoomtypeSeeder extends Seeder
         ]);
         $data->amenities()->sync([1, 2, 3]);
         Roomtype::create([
-            'type_name' => 'Standard',
+            'type_name' => 'Standard Room',
             'adult_occupancy' => '2',
             'child_occupancy' => '2',
             'image' => 'images/roomtypes/TH6rvn6VgqyOQsNcBRJlHjb1wYRp0C.webp',

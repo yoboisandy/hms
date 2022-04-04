@@ -20,7 +20,7 @@ return new class extends Migration
             $table->date('start_date');
             $table->date('end_date');
             $table->string('price');
-            $table->string('status')->default('pending');
+            $table->string('status')->default('Pending');
             $table->foreignId('roomtype_id', 'exists:roomtypes,id')->constrained();
             $table->timestamps();
         });
