@@ -20,7 +20,7 @@ class BookController extends Controller
      */
     public function index()
     {
-        $room = Book::with(['roomtype', 'user'])->get();
+        $room = Book::with(['roomtype.rooms', 'user', 'room'])->get();
         return response()->json($room);
     }
 
@@ -139,7 +139,7 @@ class BookController extends Controller
 
     public function showBookingOfUser()
     {
-        $bookings = Book::orderBy('id', 'desc')->with(['roomtype'])->where('user_id', auth()->user()->id)->get();
+        $bookings = Book::orderBy('id', 'desc')->with(['roomtype', 'room'])->where('user_id', auth()->user()->id)->get();
         return response()->json($bookings);
     }
 
@@ -150,6 +150,26 @@ class BookController extends Controller
         ]);
         return response()->json([
             'message' => 'Booking Status Updated',
+        ]);
+    }
+    public function assignRoom(Request $request, Book $book)
+    {
+        $booked_rooms = $book->whereBetween('start_date', [$book->start_date, $book->end_date])
+            ->orWhereBetween('end_date', [$book->start_date, $book->end_date])
+            ->pluck('room_id');
+
+        // return $booked_rooms;
+
+        if ($booked_rooms->contains($request->room_id)) {
+            return response()->json([
+                "message" => "Room Already assigned"
+            ]);
+        }
+        $book->update([
+            'room_id' => $request->room_id
+        ]);
+        return response()->json([
+            'message' => 'Room Assigned Successfully',
         ]);
     }
 }

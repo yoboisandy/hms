@@ -82,4 +82,31 @@ class CustomerController extends Controller
         $customer->delete();
         return response()->json(['message' => 'Customer deleted sucessfully']);
     }
+
+    public function register(Request $request)
+    {
+        $data = $request->validate([
+            'firstname' => ['required', 'alpha'],
+            'lastname' => ['required', 'alpha'],
+            'email' => ['required', 'email', 'unique:customers,email'],
+            'phone' => ['required', 'integer', 'digits:10', 'regex:/((98)|(97))(\d){8}/'],
+            'address' => ['required'],
+            'password' => ['required', 'min:8'],
+            'citizenship_number' => ['required', 'integer',  'gt:0', 'digits:10', 'regex:/(\d){10}/'],
+        ]);
+
+        $data['password'] = bcrypt($request->password);
+        DB::transaction(function () use ($data) {
+            $user = User::create([
+                'name' => $data['firstname'] . " " . $data['lastname'],
+                'email' => $data['email'],
+                'password' =>  $data['password'],
+                'role' => 'Customer',
+            ]);
+            $data['user_id'] = $user->id;
+            Customer::create($data);
+        });
+
+        return response()->json(['message' => 'Customer added sucessfully']);
+    }
 }
