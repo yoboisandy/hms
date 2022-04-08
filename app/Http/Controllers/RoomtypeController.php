@@ -78,7 +78,7 @@ class RoomtypeController extends Controller
      */
     public function show(Roomtype $roomtype)
     {
-        $roomtype->load('amenities');
+        $roomtype->load(['amenities', 'rooms']);
 
         return response()->json($roomtype);
     }
