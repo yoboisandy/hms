@@ -15,10 +15,11 @@ return new class extends Migration
     {
         Schema::create('orders', function (Blueprint $table) {
             $table->id();
-            $table->string('status')->default('pending');
+            $table->string('status')->default('Pending');
             $table->foreignId('room_id')->constrained();
             $table->foreignId('food_id');
             $table->integer('price');
+            $table->integer('quantity');
             $table->foreignId('user_id')->constrained();
             $table->timestamps();
         });

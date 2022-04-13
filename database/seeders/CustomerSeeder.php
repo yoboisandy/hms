@@ -16,7 +16,7 @@ class CustomerSeeder extends Seeder
      */
     public function run()
     {
-        User::create([
+        $user = User::create([
             "name" => "Asim Poudel",
             'email' => 'customer@customer.com',
             'password' => bcrypt('password'),
@@ -31,7 +31,7 @@ class CustomerSeeder extends Seeder
             'address' => 'Gaindakot',
             'citizenship_number' => '1-1-24515',
             'password' => bcrypt('password'),
-            'user_id' => '2',
+            'user_id' => $user->id,
         ]);
     }
 }

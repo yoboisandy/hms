@@ -72,7 +72,9 @@ class DepartmentController extends Controller
         ]);
 
         DB::transaction(function () use ($data, $request, $department) {
-            $department->update($data);
+            $department->update([
+                "name" => $request->name
+            ]);
             $department->roles()->sync($request->roles);
         });
 

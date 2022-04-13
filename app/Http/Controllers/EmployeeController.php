@@ -33,21 +33,21 @@ class EmployeeController extends Controller
     public function store(Request $request)
     {
         $data = $request->validate([
-            'firstname' => ['required', 'alpha'],
-            'lastname' => ['required', 'alpha'],
-            'email' => ['required', 'unique:employees,email'],
+            'firstname' => ['required', 'regex:/^[a-zA-z ]{1,}$/'],
+            'lastname' => ['required', 'regex:/^[a-zA-z ]{1,}$/'],
+            'email' => ['required', 'unique:employees,email', 'unique:users,email'],
             'password' => ['required', 'min:8'],
-            'dob' => ['required', 'after_or_equal:now'],
-            'phone' => ['required'],
+            'dob' => ['required', 'before:-18 years'],
+            'phone' => ['required', 'regex:/((98)|(97))(\d){8}/'],
             'department_id' => ['required', 'exists:departments,id'],
             'role_id' => ['required', 'exists:roles,id'],
-            'designation' => ['required', 'alpha'],
-            'address' => ['required',],
+            'designation' => ['required', 'regex:/^[a-zA-z ]{1,}$/'],
+            'address' => ['required'],
             'image' => ['required', 'image'],
-            'citizenship_number' => ['required'],
-            'pan_number' => ['required'],
-            'joining_date' => ['required', 'before_or_equal:now'],
-            'salary' => ['required', 'numeric'],
+            'citizenship_number' => ['required', 'regex:/^[0-9]{1,}[0-9-]{1,}[0-9]$/'],
+            'pan_number' => ['required', 'numeric'],
+            'joining_date' => ['required', 'after_or_equal:now'],
+            'salary' => ['required', 'numeric', 'gt:0'],
             'shift_id' => ['required'],
         ]);
 
@@ -94,22 +94,19 @@ class EmployeeController extends Controller
      */
     public function update(Request $request, Employee $employee)
     {
-        // return response()->json($request->all());
         $data = $request->validate([
-            'firstname' => ['required', 'alpha'],
-            'lastname' => ['required', 'alpha'],
-            'email' => ['required', 'unique:employees,email'],
-            'dob' => ['required', 'after_or_equal:now'],
-            'phone' => ['required'],
+            'firstname' => ['required', 'regex:/^[a-zA-z ]{1,}$/'],
+            'lastname' => ['required', 'regex:/^[a-zA-z ]{1,}$/'],
+            'email' => ['required', 'unique:employees,email,' . $employee->id, 'unique:users,email,' . $employee->user_id],
+            'phone' => ['required', 'regex:/((98)|(97))(\d){8}/'],
             'department_id' => ['required', 'exists:departments,id'],
             'role_id' => ['required', 'exists:roles,id'],
-            'designation' => ['required', 'alpha'],
-            'address' => ['required',],
-            'image' => ['required', 'image'],
-            'citizenship_number' => ['required'],
-            'pan_number' => ['required'],
-            'joining_date' => ['required', 'before_or_equal:now'],
-            'salary' => ['required', 'numeric'],
+            'designation' => ['required', 'regex:/^[a-zA-z ]{1,}$/'],
+            'address' => ['required'],
+            'citizenship_number' => ['required', 'regex:/^[0-9]{1,}[0-9-]{1,}[0-9]$/'],
+            'pan_number' => ['required', 'numeric'],
+            'joining_date' => ['required', 'after_or_equal:now'],
+            'salary' => ['required', 'numeric', 'gt:0'],
             'shift_id' => ['required'],
         ]);
 
@@ -130,13 +127,28 @@ class EmployeeController extends Controller
             }
         }
 
-        $data['password'] = bcrypt($request->password);
+        if ($employee->dob !== $request->dob) {
+            $request->validate([
+                'dob' => ['required', 'before:-18 years'],
+            ]);
+
+            $data['dob'] = $request->dob;
+        }
+
+        if ($employee->email !== $request->email) {
+            $request->validate([
+                'email' => ['required', 'unique:employees,email,' . $employee->id, 'unique:users,email,' . $employee->user_id],
+            ]);
+            $data['email'] = $request->email;
+            $userdata['email'] = $request->email;
+        }
+
+        $userdata['name'] =  $data['firstname'] . " " . $data['lastname'];
         //getting user id from employee table
         $user = User::find($employee->user_id);
         //assigning email with data['email'] 
-        $u = ['email' => $data['email']];
-        DB::transaction(function () use ($data, $u, $user, $employee) {
-            $user->update($u);
+        DB::transaction(function () use ($data, $userdata, $user, $employee) {
+            $user->update($userdata);
             $employee->update($data);
         });
 

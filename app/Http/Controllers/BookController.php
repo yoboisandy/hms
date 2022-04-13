@@ -41,14 +41,14 @@ class BookController extends Controller
 
 
 
-
+        $now = Carbon::now()->format('Y-m-d');
         $request->validate([
             // 'room_req' => ['required', 'gte:1'],
-            'start_date' => ['bail', 'required',  'required_with:end_date', 'after_or_equal:' . now(),  'date', 'before_or_equal:end_date'],
+            'start_date' => ['bail', 'required',  'required_with:end_date', 'after_or_equal:' . $now,  'date', 'before_or_equal:end_date'],
             'end_date' => ['bail', 'required', 'required_with:start_date', 'date', 'after_or_equal:start_date'],
-            // 'roomtype_id' => ['required'],
+            'roomtype_id' => ['required', 'exists:roomtypes,id'],
             'child_occupancy' => ['required', 'lte:' . $rt_child_occupancy, 'gte:0'],
-            'adult_occupancy' => ['required', 'lte:' . $rt_adult_occupancy, 'gte:0'],
+            'adult_occupancy' => ['required', 'lte:' . $rt_adult_occupancy, 'gt:0'],
             'number_of_people' => ['lte:' . $rt_higher_occupancy, 'gte:' . $rt_base_occupancy]
         ]);
         $start_date = Carbon::parse($request->start_date);
@@ -69,7 +69,7 @@ class BookController extends Controller
         // return $count_book_room;
         $booking_rooms = Book::where('roomtype_id', $request->roomtype_id)
             ->whereBetween('start_date', [$start_date, $end_date])
-            ->orWhereBetween('end_date', [$start_date, $end_date])
+            ->orWhereBetween('end_date', [$start_date, $end_date])->where('status', '!=', 'Canceled')
             ->get()
             ->pluck('roomtype_id')
             ->count();

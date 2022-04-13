@@ -28,7 +28,7 @@ class RoleController extends Controller
     public function store(Request $request)
     {
         $data = $request->validate([
-            'name' => ['required', 'unique:roles,name', 'alpha'],
+            'name' => ['required', 'unique:roles,name', 'regex:/^[a-zA-z ]{1,}$/'],
         ]);
 
         Role::create($data);
@@ -59,7 +59,7 @@ class RoleController extends Controller
         $data = $request->validate([]);
         if ($role->name != $request->name) {
             $data = $request->validate([
-                'name' => ['required', 'unique:roles,name', 'alpha'],
+                'name' => ['required', 'unique:roles,name', 'regex:/^[a-zA-z ]{1,}$/'],
             ]);
         }
 

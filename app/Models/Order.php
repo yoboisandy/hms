@@ -9,5 +9,20 @@ class Order extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['room_id', 'food_id', 'user_id', 'status', 'price'];
+    protected $fillable = ['room_id', 'food_id', 'user_id', 'quantity',  'status', 'price'];
+
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
+
+    public function food()
+    {
+        return $this->belongsTo(Food::class);
+    }
+
+    public function room()
+    {
+        return $this->belongsTo((Room::class));
+    }
 }

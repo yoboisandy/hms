@@ -16,64 +16,40 @@ class HallSeeder extends Seeder
     public function run()
     {
         $hall = Hall::create([
-            "name" => "Hall A",
+            "name" => "Meeting Hall",
             "description" => "Lorem ipsum dolor sit amet consectetur adipisicing elit. Amet totam iste laborum necessitatibus sequi reprehenderit aspernatur labore est officiis itaque.",
-            "base_occupancy" => "2",
-            "high_occupancy" => "3",
+            "base_occupancy" => "10",
+            "high_occupancy" => "15",
             "floor_id" => "1",
-            "image" => "images/amenities/RECBzrohMPpEKBMnlDyS8cNr0SK02v.jpg",
+            "image" => "images/halls/L5pFpJzYqkF0LjtRQG8T.jpg",
             "base_price" => "2400",
             "high_price" => "3000",
 
         ]);
-        $hall->amenities()->sync([1, 2, 4]);
+        $hall->amenities()->sync([1, 2, 5]);
         $hall = Hall::create([
-            "name" => "Hall B",
+            "name" => "Wedding or Party Hall",
             "description" => "Lorem ipsum dolor sit amet consectetur adipisicing elit. Amet totam iste laborum necessitatibus sequi reprehenderit aspernatur labore est officiis itaque.",
-            "base_occupancy" => "2",
-            "high_occupancy" => "3",
+            "base_occupancy" => "150",
+            "high_occupancy" => "300",
             "floor_id" => "1",
-            "image" => "images/amenities/RECBzrohMPpEKBMnlDyS8cNr0SK02v.jpg",
-            "base_price" => "2400",
-            "high_price" => "3000",
+            "image" => "images/halls/OASZioNiJzmZ22t3t6a4.jpg",
+            "base_price" => "1700",
+            "high_price" => "34000",
 
         ]);
-        $hall->amenities()->sync([1, 2, 4]);
+        $hall->amenities()->sync([1, 2, 5]);
         $hall = Hall::create([
-            "name" => "Hall C",
+            "name" => "Luxury Hall",
             "description" => "Lorem ipsum dolor sit amet consectetur adipisicing elit. Amet totam iste laborum necessitatibus sequi reprehenderit aspernatur labore est officiis itaque.",
-            "base_occupancy" => "2",
-            "high_occupancy" => "3",
+            "base_occupancy" => "100",
+            "high_occupancy" => "150",
             "floor_id" => "1",
-            "image" => "images/amenities/RECBzrohMPpEKBMnlDyS8cNr0SK02v.jpg",
-            "base_price" => "2400",
-            "high_price" => "3000",
+            "image" => "images/halls/rkYziJ6uHHKBTquRO4up.jpg",
+            "base_price" => "20000",
+            "high_price" => "70000",
 
         ]);
-        $hall->amenities()->sync([1, 2, 4]);
-        $hall = Hall::create([
-            "name" => "Hall D",
-            "description" => "Lorem ipsum dolor sit amet consectetur adipisicing elit. Amet totam iste laborum necessitatibus sequi reprehenderit aspernatur labore est officiis itaque.",
-            "base_occupancy" => "2",
-            "high_occupancy" => "3",
-            "floor_id" => "1",
-            "image" => "images/amenities/RECBzrohMPpEKBMnlDyS8cNr0SK02v.jpg",
-            "base_price" => "2400",
-            "high_price" => "3000",
-
-        ]);
-        $hall->amenities()->sync([1, 2, 4]);
-        $hall = Hall::create([
-            "name" => "Hall E",
-            "description" => "Lorem ipsum dolor sit amet consectetur adipisicing elit. Amet totam iste laborum necessitatibus sequi reprehenderit aspernatur labore est officiis itaque.",
-            "base_occupancy" => "2",
-            "high_occupancy" => "3",
-            "floor_id" => "1",
-            "image" => "images/amenities/RECBzrohMPpEKBMnlDyS8cNr0SK02v.jpg",
-            "base_price" => "2400",
-            "high_price" => "3000",
-
-        ]);
-        $hall->amenities()->sync([1, 2, 4]);
+        $hall->amenities()->sync([1, 2, 5]);
     }
 }

@@ -23,11 +23,11 @@ class DepartmentSeeder extends Seeder
         $dept = Department::create([
             'name' => 'Kitchen',
         ]);
-        $dept->roles()->sync([4]);
+        $dept->roles()->sync([4, 5, 6]);
 
         $dept = Department::create([
             'name' => 'FrontOffice',
         ]);
-        $dept->roles()->sync([1, 2]);
+        $dept->roles()->sync([3]);
     }
 }

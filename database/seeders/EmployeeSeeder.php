@@ -16,7 +16,7 @@ class EmployeeSeeder extends Seeder
      */
     public function run()
     {
-        User::create([
+        $user = User::create([
             'name' => 'Employee Employee',
             'email' => 'employee@employee.com',
             'password' => bcrypt('password'),
@@ -40,9 +40,9 @@ class EmployeeSeeder extends Seeder
             'joining_date' => '2075/2/14',
             'salary' => '5000',
             'shift_id' => '1',
-            'user_id' => '1',
+            'user_id' => $user->id,
         ]);
-        User::create([
+        $user = User::create([
             'name' => 'Front Office',
             'email' => 'front@front.com',
             'password' => bcrypt('password'),
@@ -56,7 +56,7 @@ class EmployeeSeeder extends Seeder
             'password' => bcrypt('password'),
             'dob' => '2007/10/12',
             'phone' => '1414142536',
-            'department_id' => '2',
+            'department_id' => '3',
             'role_id' => '3',
             'designation' => 'Mr',
             'address' => 'Tandi 6,Chitwan',
@@ -66,7 +66,7 @@ class EmployeeSeeder extends Seeder
             'joining_date' => '2075/2/14',
             'salary' => '5000',
             'shift_id' => '1',
-            'user_id' => '3',
+            'user_id' => $user->id,
         ]);
     }
 }
