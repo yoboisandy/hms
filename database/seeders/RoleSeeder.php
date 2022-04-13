@@ -22,10 +22,16 @@ class RoleSeeder extends Seeder
             'name' => 'Housekeeper',
         ]);
         Role::create([
-            'name' => 'FrontDesk',
+            'name' => 'Recepcionist',
         ]);
         Role::create([
             'name' => 'Chef',
+        ]);
+        Role::create([
+            'name' => 'Waiter',
+        ]);
+        Role::create([
+            'name' => 'Dish Washer',
         ]);
         Role::create([
             'name' => 'Employee',

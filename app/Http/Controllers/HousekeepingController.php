@@ -27,7 +27,7 @@ class HousekeepingController extends Controller
     public function store(Request $request)
     {
         $data = $request->validate([
-            'name' => ['required', 'unique:housekeepings,name', 'alpha'],
+            'name' => ['required', 'unique:housekeepings,name', 'regex:/^[a-zA-z ]{1,}$/'],
         ]);
 
         Housekeeping::create($data);
@@ -56,7 +56,7 @@ class HousekeepingController extends Controller
     public function update(Request $request, Housekeeping $housekeeping)
     {
         $data = $request->validate([
-            'name' => ['required', 'unique:housekeepings,name', 'alpha'],
+            'name' => ['required', 'unique:housekeepings,name', 'regex:/^[a-zA-z ]{1,}$/'],
         ]);
 
         $housekeeping->update($data);

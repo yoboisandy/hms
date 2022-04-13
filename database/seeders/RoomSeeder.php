@@ -49,7 +49,7 @@ class RoomSeeder extends Seeder
             'capacity' => '4',
             'price' => '50000',
             'description' => 'This is best of the best room!',
-            'roomtype_id' => '4',
+            'roomtype_id' => '3',
             'status' => 'pending',
         ]);
         Room::create([
@@ -58,7 +58,7 @@ class RoomSeeder extends Seeder
             'capacity' => '4',
             'price' => '50000',
             'description' => 'This is best of the best room!',
-            'roomtype_id' => '3',
+            'roomtype_id' => '1',
             'status' => 'pending',
         ]);
         Room::create([
@@ -67,7 +67,7 @@ class RoomSeeder extends Seeder
             'capacity' => '4',
             'price' => '50000',
             'description' => 'This is best of the best room!',
-            'roomtype_id' => '3',
+            'roomtype_id' => '2',
             'status' => 'pending',
         ]);
     }

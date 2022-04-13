@@ -3,10 +3,13 @@
 use App\Http\Controllers\BookController;
 use App\Http\Controllers\CustomerController;
 use App\Http\Controllers\ForgotpasswordController;
+use App\Http\Controllers\FrontController;
+use App\Http\Controllers\OrderController;
 use App\Http\Controllers\RoomtypeController;
 use App\Models\Roomtype;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+
 
 // all
 Route::get('/type/{roomtype}', [\App\Http\Controllers\RoomtypeController::class, 'viewTypes']);
@@ -17,7 +20,6 @@ Route::get('/viewhalls', [App\Http\Controllers\HallController::class, 'index']);
 Route::put('/changestatus/{book}', [BookController::class, 'changeBookingStatus']);
 Route::post('/viewavailable', [App\Http\Controllers\FrontController::class, 'roomAvailability']);
 Route::get('/count', [\App\Http\Controllers\CountController::class, 'countAll']);
-Route::post('/register', [\App\Http\Controllers\CustomerController::class, 'register']);
 
 
 // forget password
@@ -29,6 +31,7 @@ Route::post('/deletetoken/{user}', [ForgotpasswordController::class, 'deleteToke
 // auth
 // Route::post('/register', [App\Http\Controllers\AuthController::class, 'register']);
 Route::post('/login', [\App\Http\Controllers\AuthController::class, 'login']);
+Route::post('/register', [\App\Http\Controllers\CustomerController::class, 'register']);
 Route::post('/logout', [App\Http\Controllers\AuthController::class, 'logout']);
 
 // customer
@@ -38,6 +41,8 @@ Route::middleware(['auth:sanctum', 'isCustomer'])->group(function () {
     Route::get('/foodavailables', [App\Http\Controllers\FoodController::class, 'foodAvailables']);
     Route::post('/order-food', [App\Http\Controllers\OrderController::class, 'order_food']);
     Route::get('/mybookings', [App\Http\Controllers\BookController::class, 'showBookingOfUser']);
+    Route::get("/canorderfood", [FrontController::class, 'canOrderFood']);
+    Route::get('/foodavailable', [App\Http\Controllers\FoodController::class, 'foodAvailable']);
 });
 
 
@@ -48,8 +53,9 @@ Route::middleware(['auth:sanctum', 'isKitchen'])->group(function () {
     Route::get('/foods/{food}', [App\Http\Controllers\FoodController::class, 'show']);
     Route::put('/foods/{food}', [App\Http\Controllers\FoodController::class, 'update']);
     Route::delete('/foods/{food}', [App\Http\Controllers\FoodController::class, 'destroy']);
-    Route::get('/foodavailable', [App\Http\Controllers\FoodController::class, 'foodAvailable']);
     Route::put('/changeavailability/{food}', [App\Http\Controllers\FoodController::class, 'changeAvailability']);
+    Route::put('/changeorderstatus/{order}', [OrderController::class, 'changeStatus']);
+    Route::get('/orders', [OrderController::class, 'index']);
 });
 
 
@@ -63,7 +69,6 @@ Route::middleware(['auth:sanctum', 'isAdminOrFront'])->group(function () {
     Route::apiResource('roomtypes', \App\Http\Controllers\RoomTypeController::class);
     Route::apiResource('rooms', \App\Http\Controllers\RoomController::class);
     Route::apiResource('floors', \App\Http\Controllers\FloorController::class);
-
     Route::put('/assignRoom/{book}', [BookController::class, 'assignRoom']);
 });
 

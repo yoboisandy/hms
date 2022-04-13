@@ -6,6 +6,7 @@ use App\Models\Hall;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Storage;
 use phpDocumentor\Reflection\PseudoTypes\Numeric_;
 
 class HallController extends Controller
@@ -30,7 +31,7 @@ class HallController extends Controller
     public function store(Request $request)
     {
         $data = $request->validate([
-            'name' => ['required', 'unique:halls,name', 'alpha'],
+            'name' => ['required', 'unique:halls,name', 'regex:/^[a-zA-z ]{1,}$/'],
             'description' => ['required'],
             'base_occupancy' => ['bail', 'required_with:high_occupancy', 'integer', 'gt:0', 'min:1'],
             'high_occupancy' => ['bail', 'required_with:base_occupancy', 'integer', 'gte:base_occupancy', 'min:2'],
@@ -67,7 +68,7 @@ class HallController extends Controller
      */
     public function show(Hall $hall)
     {
-        $hall->load('amenities');
+        $hall->load(['amenities', 'floor']);
         return response()->json($hall);
     }
 
@@ -81,28 +82,35 @@ class HallController extends Controller
     public function update(Request $request, Hall $hall)
     {
         $data = $request->validate([
-            'name' => ['required', 'unique:halls,name', 'alpha'],
+            'name' => ['required', 'unique:halls,name,' . $hall->id, 'regex:/^[a-zA-z ]{1,}$/'],
             'description' => ['required'],
             'base_occupancy' => ['bail', 'required_with:high_occupancy', 'integer', 'gt:0', 'min:1'],
             'high_occupancy' => ['bail', 'required_with:base_occupancy', 'integer', 'gte:base_occupancy', 'min:2'],
-            'amenity_id' => ['required', 'exists:amenities,id'],
+            // 'amenity_id' => ['required', 'exists:amenities,id'],
             'floor_id' => ['required', 'exists:floors,id'],
-            'image' => ['required', 'image', 'mimes:jpg,jpeg,png'],
+            // 'image' => ['required', 'image', 'mimes:jpg,jpeg,png'],
             'base_price' => ['bail', 'required_with:high_price', 'integer', 'gt:0', 'min:1'],
             'high_price' => ['bail', 'required_with:base_price', 'integer', 'gte:base_price', 'min:2'],
-            'amenities' => ['required', 'array'],
-            'amenities.*' => ['exists:amenities,id'],
+            // 'amenities' => ['required', 'array'],
+            // 'amenities.*' => ['exists:amenities,id'],
         ]);
 
-        $name = Str::random(20);
-        $ext = $request->file('image')->extension();
-        $image_name = $name . "." . $ext;
 
-        $data['image'] = $request->file('image')->storeAs('public/images/halls', $image_name);
+
+        if ($request->hasFile('image')) {
+            if ($request->image !== $hall->image) {
+                $name = Str::random(20);
+                $ext = $request->file('image')->extension();
+                $image_name = $name . "." . $ext;
+                $request->file('image')->storeAs('public/images/halls', $image_name);
+                $data['image'] = "images/halls/" . $image_name;
+                Storage::delete($hall->image);
+            }
+        }
 
         DB::transaction(function () use ($data, $request, $hall) {
             $hall->update($data);
-            $hall->amenities()->sync($request->amenities);
+            // $hall->amenities()->sync($request->amenities);
         });
 
         return response()->json(['message' => 'Hall updated sucessfully']);

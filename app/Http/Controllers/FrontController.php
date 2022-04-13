@@ -18,25 +18,32 @@ class FrontController extends Controller
 
     public function roomAvailability(Request $request)
     {
+        // return $request->all();
+        $now = Carbon::now()->format('Y-m-d');
         $request->validate([
-            'start_date' => ['bail', 'required',  'required_with:end_date', 'after_or_equal:' . now(),  'date', 'before_or_equal:end_date',],
+            'start_date' => ['bail', 'required',  'required_with:end_date', 'after_or_equal:' . $now,  'date', 'before_or_equal:end_date',],
             'end_date' => ['bail', 'required', 'required_with:start_date', 'date', 'after:start_date',],
-            'roomtype_id' => ['required',],
+            'roomtype_id' => ['required', 'exists:roomtypes,id'],
         ]);
         $start_date = Carbon::parse($request->start_date);
         $end_date = Carbon::parse($request->end_date);
         $data['roomtype_id'] = $request->roomtype_id;
         $data['start_date'] = $start_date;
         $data['end_date'] = $end_date;
+        // return $data['roomtype_id'];
 
         $room = Room::where('roomtype_id', '=', $data['roomtype_id'])->count();
         // return $room;
 
-        $book_date = Book::where('roomtype_id', '=', $data['roomtype_id'])
+        $book_date = Book::where('roomtype_id', $data['roomtype_id'])
             ->whereBetween('start_date', [$start_date, $end_date])
             ->orWhereBetween('end_date', [$start_date, $end_date])
-            ->where('status', "Confirmed")
-            ->orWhere('status', "Pending")->get()
+            ->where('status', '!=', 'Canceled')
+            ->orWhere('status', '!=', 'Checked Out')
+            // ->where('status', "Confirmed")
+            // ->where('status', "Pending")
+            // ->here('status', 'Checked In')
+            ->get()
             ->count();
         // return $book_date;
 
@@ -50,5 +57,11 @@ class FrontController extends Controller
                 "message" => "No room available for your search",
             ]);
         }
+    }
+
+    public function canOrderFood()
+    {
+        $booking = Book::where('user_id', auth()->user()->id)->where('status', 'Checked In')->get();
+        return $booking->count();
     }
 }

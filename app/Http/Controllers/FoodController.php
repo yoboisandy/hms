@@ -22,7 +22,7 @@ class FoodController extends Controller
     {
 
         $data = $request->validate([
-            'name' => ['required', 'unique:food,name', 'regex:/^[\pL\s\-]+$/u',],
+            'name' => ['required', 'unique:food,name', 'regex:/^[a-zA-z ]{1,}$/',],
             'price' => ['required', 'gt:0',],
             'status' => ['required',],
         ]);
@@ -49,7 +49,7 @@ class FoodController extends Controller
     {
         // return $request->all();
         $data = $request->validate([
-            'name' => ['required', 'unique:food,name,' . $food->id, 'regex:/^[\pL\s\-]+$/u',],
+            'name' => ['required', 'unique:food,name,' . $food->id, 'regex:/^[a-zA-z ]{1,}$/',],
             'price' => ['required', 'gt:0',],
         ]);
 
@@ -82,7 +82,7 @@ class FoodController extends Controller
 
     public function foodAvailable()
     {
-        $food = Food::select('id', 'name', 'price', 'status')->where('status', '=', 'Available')->get();
+        $food = Food::select('id', 'name', 'price', 'status', 'image')->where('status', '=', 'Available')->get();
 
         return response()->json($food);
     }

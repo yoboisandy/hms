@@ -20,13 +20,13 @@ class CustomerController extends Controller
     public function store(Request $request)
     {
         $data = $request->validate([
-            'firstname' => ['required', 'alpha'],
-            'lastname' => ['required', 'alpha'],
+            'firstname' => ['required', 'regex:/^[a-zA-z ]{1,}$/'],
+            'lastname' => ['required', 'regex:/^[a-zA-z ]{1,}$/'],
             'email' => ['required', 'email', 'unique:customers,email'],
             'phone' => ['required', 'integer', 'digits:10', 'regex:/((98)|(97))(\d){8}/'],
             'address' => ['required'],
             'password' => ['required', 'min:8'],
-            'citizenship_number' => ['required', 'integer',  'gt:0', 'digits:10', 'regex:/(\d){10}/'],
+            'citizenship_number' => ['required',  'regex:/^[0-9]{1,}[0-9-]{1,}[0-9]$/'],
         ]);
         $data['password'] = bcrypt($request->password);
         DB::transaction(function () use ($data) {
@@ -53,23 +53,28 @@ class CustomerController extends Controller
     public function update(Request $request, Customer $customer)
     {
         $data = $request->validate([
-            'firstname' => ['required', 'alpha'],
-            'lastname' => ['required', 'alpha'],
+            'firstname' => ['required', 'regex:/^[a-zA-z ]{1,}$/'],
+            'lastname' => ['required', 'regex:/^[a-zA-z ]{1,}$/'],
             'phone' => ['required', 'integer', 'digits:10', 'regex:/((98)|(97))(\d){8}/'],
             'address' => ['required'],
-            'citizenship_number' => ['required', 'integer',  'gt:0', 'digits:10', 'regex:/(\d){10}/'],
+            'citizenship_number' => ['required',  'regex:/^[0-9]{1,}[0-9-]{1,}[0-9]$/'],
         ]);
 
-        if ($customer->email != $request->email) {
-            $data = $request->validate([
-                'email' => ['required', 'email', 'unique:customers,email'],
+
+        if ($customer->email !== $request->email) {
+            $request->validate([
+                'email' => ['required', 'email', 'unique:customers,email,' . $customer->id]
             ]);
+            $data['email'] = $request->email;
+            $userdata['email'] = $request->email;
         }
 
+        $userdata['name'] =  $data['firstname'] . " " . $data['lastname'];
+
+
         $user = User::find($customer->user_id);
-        $u = ['email' => $data['email']];
-        DB::transaction(function () use ($user, $u, $data, $customer) {
-            $user->update($u);
+        DB::transaction(function () use ($user, $userdata, $data, $customer) {
+            $user->update($userdata);
             $customer->update($data);
         });
 
@@ -86,15 +91,14 @@ class CustomerController extends Controller
     public function register(Request $request)
     {
         $data = $request->validate([
-            'firstname' => ['required', 'alpha'],
-            'lastname' => ['required', 'alpha'],
+            'firstname' => ['required', 'regex:/^[a-zA-z ]{1,}$/'],
+            'lastname' => ['required', 'regex:/^[a-zA-z ]{1,}$/'],
             'email' => ['required', 'email', 'unique:customers,email'],
             'phone' => ['required', 'integer', 'digits:10', 'regex:/((98)|(97))(\d){8}/'],
             'address' => ['required'],
             'password' => ['required', 'min:8'],
-            'citizenship_number' => ['required', 'integer',  'gt:0', 'digits:10', 'regex:/(\d){10}/'],
+            'citizenship_number' => ['required',  'regex:/^[0-9]{1,}[0-9-]{1,}[0-9]$/'],
         ]);
-
         $data['password'] = bcrypt($request->password);
         DB::transaction(function () use ($data) {
             $user = User::create([

@@ -28,7 +28,7 @@ class ShiftController extends Controller
     public function store(Request $request)
     {
         $data = $request->validate([
-            'name' => ['required', 'unique:shifts,name', 'alpha'],
+            'name' => ['required', 'unique:shifts,name', 'regex:/^[a-zA-z ]{1,}$/'],
         ]);
 
         Shift::create($data);
@@ -59,7 +59,7 @@ class ShiftController extends Controller
         $data = $request->validate([]);
         if ($shift->name != $request->name) {
             $data = $request->validate([
-                'name' => ['required', 'unique:shifts,name', 'alpha'],
+                'name' => ['required', 'unique:shifts,name', 'regex:/^[a-zA-z ]{1,}$/'],
             ]);
         }
 

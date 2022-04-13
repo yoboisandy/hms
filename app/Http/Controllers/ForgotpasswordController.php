@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Jobs\DeleteTokenJob;
 use App\Models\User;
 use App\Models\Customer;
 use Illuminate\Support\Str;
@@ -40,6 +41,9 @@ class ForgotpasswordController extends Controller
         ]);
 
         $token = Forgotpassword::select('token')->where('user_id', $data['user_id'])->first();
+        if ($token) {
+            dispatch(new DeleteTokenJob())->delay(now()->addMinute());
+        }
         if ($data['token'] == $token['token']) {
             return response()->json(['message' => 'Valid Token']);
         } else {

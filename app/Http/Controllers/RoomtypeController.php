@@ -35,7 +35,7 @@ class RoomtypeController extends Controller
 
 
         $data = $request->validate([
-            'type_name' => ['required', 'unique:roomtypes,type_name'],
+            'type_name' => ['required', 'unique:roomtypes,type_name', 'regex:/^[a-zA-z ]{1,}$/'],
             'description' => ['nullable'],
             'adult_occupancy' => ['required', 'integer', 'gt:0'],
             'child_occupancy' => ['required', 'integer', 'gt:0'],
@@ -93,33 +93,37 @@ class RoomtypeController extends Controller
     public function update(Request $request, Roomtype $roomtype)
     {
         $data = $request->validate([
-            'type_name' => ['required', 'unique:roomtypes,type_name', 'alpha'],
+            'type_name' => ['required', 'unique:roomtypes,type_name,' . $roomtype->id, 'regex:/^[a-zA-z ]{1,}$/'],
             'description' => ['nullable'],
             'adult_occupancy' => ['required', 'integer', 'gt:0'],
             'child_occupancy' => ['required', 'integer', 'gt:0'],
-            'image' => ['image', 'mimes:png,jpg'],
             'base_occupancy' => ['required_with:higher_occupancy', 'min:1', 'integer', 'gt:0'],
             'higher_occupancy' => ['required_with:base_occupancy', 'min:2', 'integer', 'gt:0'],
-            'extra_bed' => ['bail', 'required_with:extra_bed_price', 'integer', 'gt:0'],
+            'extra_bed' => ['bail', 'required_with:extra_bed_price', 'integer', 'gte:0'],
             'base_price' => ['required', 'integer', 'gt:0'],
             'additional_price' => ['required', 'integer', 'gt:0'],
             'extra_bed_price' => ['bail', 'required_with:extra_bed', 'integer', 'gt:0'],
-            'amenities' => ['required', 'array'],
-            'amenities.*' => ['exists:amenities,id'],
+            // 'amenities' => ['required', 'array'],
+            // 'amenities.*' => ['exists:amenities,id'],
         ]);
 
-        $ext = $request->file('image')->extension();
-        $name = Str::random(30) . "." . $ext;
-        $request->file('image')->storeAs('public/images/roomtypes', $name);
-        $data['image'] = "images/roomtypes/" . $name;
-
-        if ($roomtype->image) {
-            Storage::delete('public/' . $roomtype->image);
+        if ($request->hasFile('image')) {
+            $request->validate([
+                'image' => ['image', 'mimes:png,jpg,webp'],
+            ]);
+            $ext = $request->file('image')->extension();
+            $name = Str::random(30) . "." . $ext;
+            $request->file('image')->storeAs('public/images/roomtypes', $name);
+            $data['image'] = "images/roomtypes/" . $name;
+            if ($roomtype->image) {
+                Storage::delete('public/' . $roomtype->image);
+            }
         }
 
-
-        $roomtype->update($data);
-        $roomtype->amenities()->sync($request->amenities);
+        DB::transaction(function () use ($data, $request, $roomtype) {
+            $roomtype->update($data);
+            // $roomtype->amenities()->sync($request->amenities);
+        });
 
         return response()->json(["message" => "Room Type Updated Successfully"]);
     }

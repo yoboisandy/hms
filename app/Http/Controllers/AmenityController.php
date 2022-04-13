@@ -29,10 +29,11 @@ class AmenityController extends Controller
     public function store(Request $request)
     {
         $data = $request->validate([
-            'name' => ['required'],
+            'name' => ['required', 'regex:/^[a-zA-z ]{1,}$/', 'unique:amenities,name'],
             'description' => ['nullable'],
             'icon' => ['required', 'image', 'mimes:png,jpg'],
         ]);
+
 
         $ext = $request->file('icon')->extension();
         $name = Str::random(30) . "." . $ext;
@@ -67,18 +68,22 @@ class AmenityController extends Controller
     public function update(Request $request, Amenity $amenity)
     {
         $data = $request->validate([
-            'name' => ['required', 'name'],
+            'name' => ['required',  'regex:/^[a-zA-z ]{1,}$/', 'unique:amenities,name,' . $amenity->id],
             'description' => ['nullable'],
-            'icon' => ['required', 'image', 'mimes:png,jpg']
         ]);
 
-        $ext = $request->file('icon')->extension();
-        $name = Str::random(30) . "." . $ext;
-        $request->file('icon')->storeAs('public/images/amenities', $name);
-        $data['icon'] = "images/amenities/" . $name;
+        if ($request->icon !== $amenity->icon) {
+            $request->validate([
+                'icon' => ['required', 'image', 'mimes:png,jpg']
+            ]);
+            $ext = $request->file('icon')->extension();
+            $name = Str::random(30) . "." . $ext;
+            $request->file('icon')->storeAs('public/images/amenities', $name);
+            $data['icon'] = "images/amenities/" . $name;
 
-        if ($amenity->icon) {
-            Storage::delete('public/' . $amenity->icon);
+            if ($amenity->icon) {
+                Storage::delete('public/' . $amenity->icon);
+            }
         }
 
         $amenity->update($data);

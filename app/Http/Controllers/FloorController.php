@@ -27,7 +27,7 @@ class FloorController extends Controller
     public function store(Request $request)
     {
         $data = $request->validate([
-            'name' => ['required', 'alpha', 'unique:floors,name'],
+            'name' => ['required', 'regex:/^[a-zA-z ]{1,}$/', 'unique:floors,name'],
             'floor_number' => ['required', 'integer', 'unique:floors,floor_number'],
             'description' => ['required'],
         ]);
@@ -58,8 +58,8 @@ class FloorController extends Controller
     public function update(Request $request, Floor $floor)
     {
         $data = $request->validate([
-            'name' => ['required', 'alpha', 'unique:floors,name'],
-            'floor_number' => ['required', 'integer', 'unique:floors,floor_number'],
+            'name' => ['required', 'regex:/^[a-zA-z ]{1,}$/', 'unique:floors,name'],
+            'floor_number' => ['required', 'integer', 'unique:floors,floor_number,' . $floor->id],
             'description' => ['required'],
         ]);
 
