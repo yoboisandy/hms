@@ -7,9 +7,14 @@ use App\Models\Food;
 use App\Models\Room;
 use App\Models\Order;
 use App\Models\Roomtype;
+use App\Models\User;
+use App\Notifications\BookingConfirmed;
+use App\Notifications\BookingRequestSent;
+use App\Notifications\BookingStatusChanged;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Notification;
 
 class BookController extends Controller
 {
@@ -86,6 +91,14 @@ class BookController extends Controller
             // return $data['room_id'];
             Book::create($data);
             // $room_available = $room_available - $data['room_req'];
+            $bookingdetail = [
+                "body" => "Your Booking Request Has Been Sent Successfully",
+                "footer" => "We will reach back to you soon",
+                "url" => url('localhost:3000/bookings')
+            ];
+            $user = User::find(auth()->user()->id);
+            $user->notify(new BookingRequestSent($bookingdetail));
+            // Notification::send($user, BookingRequestSent($bookingdetail));
             return response()->json(['message' => 'Room booked Sucessfully']);
         }
     }
@@ -148,6 +161,11 @@ class BookController extends Controller
         $book->update([
             'status' => $request->status
         ]);
+        if ($book->status == "Confirmed") {
+            $user = User::find($book->user_id);
+            $user->notify(new BookingConfirmed($book));
+        }
+
         return response()->json([
             'message' => 'Booking Status Updated',
         ]);
