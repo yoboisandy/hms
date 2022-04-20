@@ -8,6 +8,7 @@ use App\Models\Customer;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use App\Models\Forgotpassword;
+use App\Notifications\ForgotPasswordToken;
 
 class ForgotpasswordController extends Controller
 {
@@ -27,6 +28,7 @@ class ForgotpasswordController extends Controller
                 'email' => $data['email'],
                 'user_id' => $user->id,
             ]);
+            $user->notify(new ForgotPasswordToken($forgot));
             return response()->json($forgot);
         } else {
             return response()->json(['message' => 'Email not found !!!']);
@@ -40,10 +42,11 @@ class ForgotpasswordController extends Controller
             'user_id' => ['exists:users,id']
         ]);
 
-        $token = Forgotpassword::select('token')->where('user_id', $data['user_id'])->first();
-        if ($token) {
-            dispatch(new DeleteTokenJob())->delay(now()->addMinute());
-        }
+        $token = Forgotpassword::select('token')->where('user_id', $data['user_id'])->orderBy('id', 'desc')->first();
+        // if ($token) {
+        //     $token->delete()->delay(now()->addMinute());
+        // }
+        // return $token;
         if ($data['token'] == $token['token']) {
             return response()->json(['message' => 'Valid Token']);
         } else {
