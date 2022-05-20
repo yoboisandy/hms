@@ -17,7 +17,6 @@ return new class extends Migration
             $table->id();
             $table->string('room_no');
             $table->foreignId('floor_id', 'exists:floors, id')->constrained();
-            $table->string('capacity');
             $table->string('price');
             $table->string('description');
             $table->foreignId('roomtype_id', 'exists:roomtypes,id')->constrained();

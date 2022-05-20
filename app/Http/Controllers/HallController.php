@@ -33,13 +33,11 @@ class HallController extends Controller
         $data = $request->validate([
             'name' => ['required', 'unique:halls,name', 'regex:/^[a-zA-z ]{1,}$/'],
             'description' => ['required'],
-            'base_occupancy' => ['bail', 'required_with:high_occupancy', 'integer', 'gt:0', 'min:1'],
-            'high_occupancy' => ['bail', 'required_with:base_occupancy', 'integer', 'gte:base_occupancy', 'min:2'],
+            'occupancy' => ['bail', 'required', 'integer', 'gt:0', 'min:1'],
             // 'amenity_id' => ['required', 'exists:amenities,id'],
             'floor_id' => ['required', 'exists:floors,id'],
             'image' => ['required', 'image', 'mimes:jpg,jpeg,png'],
-            'base_price' => ['bail', 'required_with:high_price', 'integer', 'gt:0', 'min:1'],
-            'high_price' => ['bail', 'required_with:base_price', 'integer', 'gte:base_price', 'min:2'],
+            'price' => ['bail', 'required', 'integer', 'gt:0', 'min:1'],
             'amenities' => ['required', 'array'],
             'amenities.*' => ['exists:amenities,id'],
         ]);
@@ -84,13 +82,11 @@ class HallController extends Controller
         $data = $request->validate([
             'name' => ['required', 'unique:halls,name,' . $hall->id, 'regex:/^[a-zA-z ]{1,}$/'],
             'description' => ['required'],
-            'base_occupancy' => ['bail', 'required_with:high_occupancy', 'integer', 'gt:0', 'min:1'],
-            'high_occupancy' => ['bail', 'required_with:base_occupancy', 'integer', 'gte:base_occupancy', 'min:2'],
+            'occupancy' => ['bail', 'required', 'integer', 'gt:0', 'min:1'],
             // 'amenity_id' => ['required', 'exists:amenities,id'],
             'floor_id' => ['required', 'exists:floors,id'],
             // 'image' => ['required', 'image', 'mimes:jpg,jpeg,png'],
-            'base_price' => ['bail', 'required_with:high_price', 'integer', 'gt:0', 'min:1'],
-            'high_price' => ['bail', 'required_with:base_price', 'integer', 'gte:base_price', 'min:2'],
+            'price' => ['bail', 'required', 'integer', 'gt:0', 'min:1'],
             // 'amenities' => ['required', 'array'],
             // 'amenities.*' => ['exists:amenities,id'],
         ]);

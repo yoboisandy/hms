@@ -17,12 +17,10 @@ return new class extends Migration
             $table->id();
             $table->string('name');
             $table->text('description');
-            $table->string('base_occupancy');
-            $table->string('high_occupancy');
+            $table->string('occupancy');
             $table->foreignId('floor_id')->constrained();
             $table->string('image');
-            $table->string('base_price');
-            $table->string('high_price');
+            $table->string('price');
             $table->timestamps();
         });
     }
