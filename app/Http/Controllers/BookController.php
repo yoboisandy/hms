@@ -11,6 +11,7 @@ use App\Models\User;
 use App\Notifications\BookingConfirmed;
 use App\Notifications\BookingRequestSent;
 use App\Notifications\BookingStatusChanged;
+use ErrorException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Auth;
@@ -37,60 +38,35 @@ class BookController extends Controller
      */
     public function store(Request $request, Roomtype $roomtype)
     {
-        $roomt = Roomtype::findOrFail($request->roomtype_id);
-        $rt_base_occupancy = $roomt->base_occupancy;
-        $rt_higher_occupancy = $roomt->higher_occupancy;
-        $rt_child_occupancy = $roomt->child_occupancy;
-        $rt_adult_occupancy = $roomt->adult_occupancy;
-        // $total_request = $request->adult_occupancy + $request->child_occupancy;
-
-
-
         $now = Carbon::now()->format('Y-m-d');
         $request->validate([
             // 'room_req' => ['required', 'gte:1'],
             'start_date' => ['bail', 'required',  'required_with:end_date', 'after_or_equal:' . $now,  'date', 'before_or_equal:end_date'],
             'end_date' => ['bail', 'required', 'required_with:start_date', 'date', 'after_or_equal:start_date'],
             'roomtype_id' => ['required', 'exists:roomtypes,id'],
-            'child_occupancy' => ['required', 'lte:' . $rt_child_occupancy, 'gte:0'],
-            'adult_occupancy' => ['required', 'lte:' . $rt_adult_occupancy, 'gt:0'],
-            'number_of_people' => ['lte:' . $rt_higher_occupancy, 'gte:' . $rt_base_occupancy]
+            'room_id' => ['required', 'exists:rooms,id'],
         ]);
         $start_date = Carbon::parse($request->start_date);
         $end_date = Carbon::parse($request->end_date);
         $data = ['user_id' => Auth::user()->id, 'room_id' => $request->room_id, 'roomtype_id' => $request->roomtype_id,];
         $data['start_date'] = $start_date;
         $data['end_date'] = $end_date;
-        $a = Roomtype::select('base_price')->where('id', '=', $data['roomtype_id'])
-            // ->pluck('base_price')
-            ->get('base_price');
-        $price = $a->sum('base_price');
+        $a = Roomtype::select('price')->where('id', $data['roomtype_id'])
+            ->get('price');
+        $price = $a->sum('price');
 
         $data['price'] = $price;
 
-        //Counting room
-        $room = Room::where('roomtype_id', '=', $data['roomtype_id'])->count();
-        // return $room;
-        // return $count_book_room;
-        $booking_rooms = Book::where('roomtype_id', $request->roomtype_id)
-            ->whereBetween('start_date', [$start_date, $end_date])
-            ->orWhereBetween('end_date', [$start_date, $end_date])->where('status', '!=', 'Canceled')
+        $booking_rooms = Book::whereBetween('start_date', [$start_date, $end_date])
+            ->orWhereBetween('end_date', [$start_date, $end_date])
             ->get()
-            ->pluck('roomtype_id')
-            ->count();
-        // return $booking_rooms;
+            ->pluck('room_id')
+            ->toArray();
 
+        $rooms = Room::whereNotIn('id', $booking_rooms)->get()->pluck('id')->toArray();
 
-        $room_available = $room - $booking_rooms;
-        // return $room_available;
-
-        if ($room_available == 0) {
-            return response()->json(['message' => 'no room available']);
-        } else {
-            // $data['room_id'] = Roomtype::findOrFail($data['roomtype_id'])->room()->first()->id;
-            // return $data['room_id'];
+        if (in_array($data['room_id'], $rooms)) {
             Book::create($data);
-            // $room_available = $room_available - $data['room_req'];
             $bookingdetail = [
                 "body" => "Your Booking Request Has Been Sent Successfully",
                 "footer" => "We will reach back to you soon",
@@ -99,7 +75,9 @@ class BookController extends Controller
             $user = User::find(auth()->user()->id);
             $user->notify(new BookingRequestSent($bookingdetail));
             // Notification::send($user, BookingRequestSent($bookingdetail));
-            return response()->json(['message' => 'Room booked Sucessfully']);
+            return response()->json(['message' => 'Room booked sucessfuly']);
+        } else {
+            return response()->json(['message' => 'Not available that room for that day!!']);
         }
     }
 
@@ -127,7 +105,8 @@ class BookController extends Controller
             'room_id' => ['required', 'exists:rooms,id', 'unique:books,room_id',],
         ]);
         $data['status'] = 'confirmed';
-        $book->where('id', '=', $id)->update($data);
+
+        $book->where('id', $id)->update($data);
 
         return response()->json(['message' => 'Room allocated to that bookings!!']);
     }
