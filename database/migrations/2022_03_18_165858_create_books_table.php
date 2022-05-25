@@ -16,12 +16,13 @@ return new class extends Migration
         Schema::create('books', function (Blueprint $table) {
             $table->id();
             $table->foreignId('user_id', 'exists:users,id')->constrained();
-            $table->foreignId('room_id', 'exists:rooms,id')->nullable()->constrained();
+            $table->foreignId('room_id', 'exists:rooms,id')->constrained();
             $table->date('start_date');
             $table->date('end_date');
             $table->string('price');
             $table->string('status')->default('Pending');
             $table->foreignId('roomtype_id', 'exists:roomtypes,id')->constrained();
+            $table->softDeletes();
             $table->timestamps();
         });
     }

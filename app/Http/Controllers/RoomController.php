@@ -32,8 +32,6 @@ class RoomController extends Controller
         $data = $request->validate([
             'room_no' => ['required', 'unique:rooms,room_no'],
             'floor_id' => ['required', 'exists:floors,id'],
-            'price' => ['required', 'integer', 'gt:0'],
-            'description' => ['required'],
             'roomtype_id' => ['required', 'exists:roomtypes,id'],
         ]);
 
@@ -64,9 +62,6 @@ class RoomController extends Controller
     {
         $data = $request->validate([
             'floor_id' => ['required', 'exists:floors,id'],
-            'capacity' => ['required', 'integer', 'gt:0'],
-            'price' => ['required', 'integer', 'gt:0'],
-            'description' => ['required'],
             'roomtype_id' => ['required', 'exists:roomtypes,id'],
         ]);
 

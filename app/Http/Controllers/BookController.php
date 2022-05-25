@@ -26,7 +26,7 @@ class BookController extends Controller
      */
     public function index()
     {
-        $room = Book::with(['roomtype.rooms', 'user', 'room'])->get();
+        $room = Book::withTrashed()->with(['roomtype.rooms', 'user', 'room'])->get();
         return response()->json($room);
     }
 
@@ -36,8 +36,9 @@ class BookController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request, Roomtype $roomtype)
+    public function store(Request $request)
     {
+        $occupancy = Roomtype::findOrFail($request->roomtype_id)->occupancy;
         $now = Carbon::now()->format('Y-m-d');
         $request->validate([
             // 'room_req' => ['required', 'gte:1'],
@@ -45,6 +46,7 @@ class BookController extends Controller
             'end_date' => ['bail', 'required', 'required_with:start_date', 'date', 'after_or_equal:start_date'],
             'roomtype_id' => ['required', 'exists:roomtypes,id'],
             'room_id' => ['required', 'exists:rooms,id'],
+            'occupancy' => ['required', "lte:" . $occupancy],
         ]);
         $start_date = Carbon::parse($request->start_date);
         $end_date = Carbon::parse($request->end_date);
@@ -74,10 +76,9 @@ class BookController extends Controller
             ];
             $user = User::find(auth()->user()->id);
             $user->notify(new BookingRequestSent($bookingdetail));
-            // Notification::send($user, BookingRequestSent($bookingdetail));
             return response()->json(['message' => 'Room booked sucessfuly']);
         } else {
-            return response()->json(['message' => 'Not available that room for that day!!']);
+            return response()->json(['error' => 'Not available that room for that day!!']);
         }
     }
 
@@ -124,14 +125,14 @@ class BookController extends Controller
     public function calculate($id)
     {
         $room = Book::where('user_id', $id)->where('status', 'checkin')->sum('price');
-        $food = Order::where('user_id', $id)->where('status', 'complete')->sum('price');
+        $food = Order::where('user_id', $id)->where('status', 'delivered')->sum('price');
         $price = $food + $room;
         return "Total price is: " . $price;
     }
 
     public function showBookingOfUser()
     {
-        $bookings = Book::orderBy('id', 'desc')->with(['roomtype', 'room'])->where('user_id', auth()->user()->id)->get();
+        $bookings = Book::withTrashed()->orderBy('id', 'desc')->with(['roomtype', 'room'])->where('user_id', auth()->user()->id)->get();
         return response()->json($bookings);
     }
 
@@ -145,6 +146,9 @@ class BookController extends Controller
             $user->notify(new BookingConfirmed($book));
         }
 
+        if ($book->status == "Checked Out" || $book->status == "Canceled") {
+            $book->delete();
+        }
         return response()->json([
             'message' => 'Booking Status Updated',
         ]);

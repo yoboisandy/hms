@@ -19,6 +19,8 @@ return new class extends Migration
             $table->foreignId('hall_id', 'exists:halls,id')->nullable()->constrained();
             $table->date('start_date');
             $table->date('end_date');
+            $table->string('status')->default('Pending');
+            $table->softDeletes();
             $table->timestamps();
         });
     }

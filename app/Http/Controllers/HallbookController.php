@@ -3,7 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Models\Hall;
+use App\Models\User;
 use App\Models\Hallbook;
+use App\Notifications\HallBookingConfirmed;
+use App\Notifications\HallBookingRequestSent;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Auth;
@@ -17,7 +20,8 @@ class HallbookController extends Controller
      */
     public function index()
     {
-        //
+        $bookings = Hallbook::withTrashed()->with('hall', 'user')->get();
+        return $bookings;
     }
 
     /**
@@ -39,7 +43,7 @@ class HallbookController extends Controller
         $data['start_date'] = $start_date;
         $data['end_date'] = $end_date;
 
-        $hall = Hall::where('id', '=', $data['hall_id'])->count();
+        // $hall = Hall::where('id', '=', $data['hall_id'])->count();
 
         // return $hall;
 
@@ -52,11 +56,18 @@ class HallbookController extends Controller
 
         // return $booking_halls;
 
-        $hall_available = $hall - $booking_halls;
-        if ($hall_available == 0) {
-            return response()->json(['message' => 'No hall available for that date']);
+        // $hall_available = $hall - $booking_halls;
+        if ($booking_halls > 0) {
+            return response()->json(['error' => 'No hall available for that date']);
         } else {
             Hallbook::create($data);
+            $bookingdetail = [
+                "body" => "Your Hall Booking Request Has Been Sent Successfully",
+                "footer" => "We will reach back to you soon",
+                "url" => url('localhost:3000/bookings')
+            ];
+            $user = User::find(auth()->user()->id);
+            $user->notify(new HallBookingRequestSent($bookingdetail));
             return response()->json(['message' => 'Hall booked Sucessfully']);
         }
     }
@@ -93,5 +104,31 @@ class HallbookController extends Controller
     public function destroy(Hallbook $hallbook)
     {
         //
+    }
+
+    public function changeBookingStatus(Request $request, Hallbook $hallbook)
+    {
+        // return $request->status;
+        $hallbook->update([
+            'status' => $request->status
+        ]);
+
+        if ($hallbook->status == "Confirmed") {
+            $user = User::find($hallbook->user_id);
+            $user->notify(new HallBookingConfirmed($hallbook));
+        }
+
+        if ($request->status == "Canceled" || $request->status == "Checked Out") {
+            $hallbook->delete();
+        }
+        return response()->json([
+            'message' => 'Booking Status Updated',
+        ]);
+    }
+
+    public function showBookingOfUser()
+    {
+        $bookings = Hallbook::withTrashed()->orderBy('id', 'desc')->with(['hall', 'user'])->where('user_id', auth()->user()->id)->get();
+        return response()->json($bookings);
     }
 }

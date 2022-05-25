@@ -18,8 +18,11 @@ Route::apiResource('users', \App\Http\Controllers\UserController::class);
 Route::get('/viewroomtypes', [App\Http\Controllers\RoomtypeController::class, 'index']);
 Route::get('/viewhalls', [App\Http\Controllers\HallController::class, 'index']);
 Route::put('/changestatus/{book}', [BookController::class, 'changeBookingStatus']);
+Route::put('/changehallbookstatus/{hallbook}', [App\Http\Controllers\HallbookController::class, 'changeBookingStatus']);
 Route::post('/viewavailable', [App\Http\Controllers\FrontController::class, 'roomAvailability']);
+Route::post('/hallavailability', [App\Http\Controllers\FrontController::class, 'hallAvailability']);
 Route::get('/count', [\App\Http\Controllers\CountController::class, 'countAll']);
+Route::get('/myorders', [FrontController::class, 'foodOrders'])->middleware('auth:sanctum');
 
 
 // forget password
@@ -41,6 +44,7 @@ Route::middleware(['auth:sanctum', 'isCustomer'])->group(function () {
     Route::get('/foodavailables', [App\Http\Controllers\FoodController::class, 'foodAvailables']);
     Route::post('/order-food', [App\Http\Controllers\OrderController::class, 'order_food']);
     Route::get('/mybookings', [App\Http\Controllers\BookController::class, 'showBookingOfUser']);
+    Route::get('/myhallbookings', [App\Http\Controllers\HallbookController::class, 'showBookingOfUser']);
     Route::get("/canorderfood", [FrontController::class, 'canOrderFood']);
     Route::get('/foodavailable', [App\Http\Controllers\FoodController::class, 'foodAvailable']);
 });
@@ -69,6 +73,7 @@ Route::middleware(['auth:sanctum', 'isAdminOrFront'])->group(function () {
     Route::apiResource('roomtypes', \App\Http\Controllers\RoomTypeController::class);
     Route::apiResource('rooms', \App\Http\Controllers\RoomController::class);
     Route::apiResource('floors', \App\Http\Controllers\FloorController::class);
+    Route::apiResource('hallbooks', \App\Http\Controllers\HallbookController::class);
     Route::put('/assignRoom/{book}', [BookController::class, 'assignRoom']);
 });
 

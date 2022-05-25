@@ -18,6 +18,7 @@ return new class extends Migration
             $table->string("type_name");
             $table->text("description")->nullable();
             $table->string("occupancy");
+            $table->string("price");
             $table->string("image")->nullable();
             $table->timestamps();
         });

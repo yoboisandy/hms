@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Department;
 use App\Models\User;
 use App\Models\Employee;
 use Illuminate\Support\Str;
@@ -50,7 +51,7 @@ class EmployeeController extends Controller
             'salary' => ['required', 'numeric', 'gt:0'],
             'shift_id' => ['required'],
         ]);
-
+        $role = Department::find($data["department_id"])->name;
         $name = Str::random(20);
         $ext = $request->file('image')->extension();
 
@@ -65,7 +66,7 @@ class EmployeeController extends Controller
             'name' => $data['firstname'] . " " . $data['lastname'],
             'email' => $data['email'],
             'password' => $data['password'],
-            'role' => 'Employee',
+            'role' => $role,
         ]);
 
         $data['user_id'] = $user->id;

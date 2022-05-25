@@ -40,7 +40,7 @@ class RoomtypeController extends Controller
             'occupancy' => ['required', 'integer', 'gt:0'],
             'image' => ['image', 'mimes:png,jpg,webp'],
             'amenities' => ['required', 'array'],
-            // 'amenities.*' => ['exists:amenities,id'],
+            'price' => ['required', 'integer', 'gt:0'],
         ]);
 
         if ($request->file('image')) {
@@ -87,6 +87,7 @@ class RoomtypeController extends Controller
             'type_name' => ['required', 'unique:roomtypes,type_name,' . $roomtype->id, 'regex:/^[a-zA-z ]{1,}$/'],
             'description' => ['nullable'],
             'occupancy' => ['required', 'integer', 'gt:0'],
+            'price' => ['required', 'integer', 'gt:0'],
             // 'amenities' => ['required', 'array'],
             // 'amenities.*' => ['exists:amenities,id'],
         ]);
@@ -128,7 +129,7 @@ class RoomtypeController extends Controller
     public function viewTypes(Roomtype $roomtype)
     {
         $roomtype->load('amenities');
-
+        $roomtype->load('rooms');
         return response()->json($roomtype);
     }
 }

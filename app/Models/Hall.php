@@ -12,13 +12,11 @@ class Hall extends Model
     protected $fillable = [
         'name',
         'description',
-        'base_occupancy',
-        'high_occupancy',
+        'occupancy',
         'amenity_id',
         'floor_id',
         'image',
-        'base_price',
-        'high_price'
+        'price',
     ];
 
     public function floor()
