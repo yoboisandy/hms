@@ -14,7 +14,7 @@ class ForgotpasswordController extends Controller
     public function email(Request $request)
     {
         $data = $request->validate([
-            'email' => ['required', 'email', 'exists:users,email'],
+            'email' => ['required', 'email', 'exists:users,email', 'regex:/^([a-z0-9]+)(\.[a-z0-9\+_\-]+)*@([a-z0-9\-]+\.)+[a-z]{2,6}$/ix'],
         ]);
 
         $user = User::select('id', 'email')->where('email', $data['email'])->first();

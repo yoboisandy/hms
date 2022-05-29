@@ -55,7 +55,7 @@ class FrontController extends Controller
             'end_date' => ['bail', 'required', 'required_with:start_date', 'date', 'after_or_equal:start_date'],
             'roomtype_id' => ['required', 'exists:roomtypes,id'],
             'room_id' => ['required', 'exists:rooms,id'],
-            'occupancy' => ['required', "lte:" . $occupancy],
+            'occupancy' => ['required', "gt:0", "lte:" . $occupancy],
         ]);
         $start_date = Carbon::parse($request->start_date);
         $end_date = Carbon::parse($request->end_date);

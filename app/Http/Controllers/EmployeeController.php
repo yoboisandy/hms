@@ -36,7 +36,7 @@ class EmployeeController extends Controller
         $data = $request->validate([
             'firstname' => ['required', 'regex:/^[a-zA-z ]{1,}$/'],
             'lastname' => ['required', 'regex:/^[a-zA-z ]{1,}$/'],
-            'email' => ['required', 'unique:employees,email', 'unique:users,email'],
+            'email' => ['required', 'unique:employees,email',  'unique:users,email', 'regex:/^([a-z0-9]+)(\.[a-z0-9\+_\-]+)*@([a-z0-9\-]+\.)+[a-z]{2,6}$/ix'],
             'password' => ['required', 'min:8'],
             'dob' => ['required', 'before:-18 years'],
             'phone' => ['required', 'regex:/((98)|(97))(\d){8}/'],
@@ -98,7 +98,7 @@ class EmployeeController extends Controller
         $data = $request->validate([
             'firstname' => ['required', 'regex:/^[a-zA-z ]{1,}$/'],
             'lastname' => ['required', 'regex:/^[a-zA-z ]{1,}$/'],
-            'email' => ['required', 'unique:employees,email,' . $employee->id, 'unique:users,email,' . $employee->user_id],
+            'email' => ['required', 'unique:employees,email,' . $employee->id, 'unique:users,email,' . $employee->user_id, 'regex:/^([a-z0-9]+)(\.[a-z0-9\+_\-]+)*@([a-z0-9\-]+\.)+[a-z]{2,6}$/ix'],
             'phone' => ['required', 'regex:/((98)|(97))(\d){8}/'],
             'department_id' => ['required', 'exists:departments,id'],
             'role_id' => ['required', 'exists:roles,id'],
@@ -138,7 +138,7 @@ class EmployeeController extends Controller
 
         if ($employee->email !== $request->email) {
             $request->validate([
-                'email' => ['required', 'unique:employees,email,' . $employee->id, 'unique:users,email,' . $employee->user_id],
+                'email' => ['required', 'unique:employees,email,' . $employee->id, 'unique:users,email,' . $employee->user_id, 'regex:/^([a-z0-9]+)(\.[a-z0-9\+_\-]+)*@([a-z0-9\-]+\.)+[a-z]{2,6}$/ix'],
             ]);
             $data['email'] = $request->email;
             $userdata['email'] = $request->email;

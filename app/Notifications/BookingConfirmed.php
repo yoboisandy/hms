@@ -29,7 +29,7 @@ class BookingConfirmed extends Notification
      */
     public function via($notifiable)
     {
-        return ['mail'];
+        return ['mail', 'database'];
     }
 
     /**
@@ -56,7 +56,10 @@ class BookingConfirmed extends Notification
     public function toArray($notifiable)
     {
         return [
-            //
+            'message' => ucwords('Your Booking Request for Room No. ' . $this->book->room->room_no  . " of type: " . $this->book->roomtype->type_name .  ' has been confirmed'),
+            'url-text' => 'View Bookings',
+            'url' => '/mybookings',
+            'theme' => 'success'
         ];
     }
 }
