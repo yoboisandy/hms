@@ -5,8 +5,10 @@ namespace App\Http\Controllers;
 use App\Models\Hall;
 use App\Models\User;
 use App\Models\Hallbook;
+use App\Notifications\HallBookingCanceled;
 use App\Notifications\HallBookingConfirmed;
 use App\Notifications\HallBookingRequestSent;
+use App\Notifications\HallmBookingCanceled;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Auth;
@@ -60,9 +62,9 @@ class HallbookController extends Controller
         if ($booking_halls > 0) {
             return response()->json(['error' => 'No hall available for that date']);
         } else {
-            Hallbook::create($data);
+            $hallbook = Hallbook::create($data);
             $bookingdetail = [
-                "body" => "Your Hall Booking Request Has Been Sent Successfully",
+                "body" => "Your Hall Booking Request For " . $hallbook->hall->name . " Has Been Sent Successfully",
                 "footer" => "We will reach back to you soon",
                 "url" => url('localhost:3000/bookings')
             ];
@@ -109,18 +111,27 @@ class HallbookController extends Controller
     public function changeBookingStatus(Request $request, Hallbook $hallbook)
     {
         // return $request->status;
+        $user = User::find($hallbook->user_id);
+        // $book = Hallbook::withTrashed()->findOrFail($hallbook->id);
+
+        if ($request->status == "Canceled" || $request->status == "Checked Out") {
+            $hallbook->delete();
+        }
+
+        if ($request->status == "Canceled") {
+            $user->notify(new HallBookingCanceled($hallbook));
+        }
+
         $hallbook->update([
             'status' => $request->status
         ]);
 
         if ($hallbook->status == "Confirmed") {
-            $user = User::find($hallbook->user_id);
             $user->notify(new HallBookingConfirmed($hallbook));
         }
 
-        if ($request->status == "Canceled" || $request->status == "Checked Out") {
-            $hallbook->delete();
-        }
+
+
         return response()->json([
             'message' => 'Booking Status Updated',
         ]);

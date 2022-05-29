@@ -6,6 +6,8 @@ use App\Models\Book;
 use App\Models\Food;
 use App\Models\Room;
 use App\Models\Order;
+use App\Models\User;
+use App\Notifications\FoodOrderPalced;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -42,7 +44,9 @@ class OrderController extends Controller
         if (!$checkedinrooms) {
             return response()->json(['error' => "Restricted!", 'message' => 'you must checkin hotel to order food']);
         } else {
-            Order::create($data);
+            $user = User::find($data['user_id']);
+            $order = Order::create($data);
+            $user->notify(new FoodOrderPalced($order));
             return response()->json(['messagetitle' => 'Order Successfull!', 'messagetext' => 'Your Order Will be Delivered to Room No. ' . $room_no]);
         }
     }

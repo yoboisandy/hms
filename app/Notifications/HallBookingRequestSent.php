@@ -29,7 +29,7 @@ class HallBookingRequestSent extends Notification
      */
     public function via($notifiable)
     {
-        return ['mail'];
+        return ['mail', 'database'];
     }
 
     /**
@@ -56,7 +56,10 @@ class HallBookingRequestSent extends Notification
     public function toArray($notifiable)
     {
         return [
-            //
+            'message' => ucwords($this->bookingdetails['body']),
+            'url-text' => 'View Bookings',
+            'url' => '/myhallbookings',
+            'theme' => 'info'
         ];
     }
 }

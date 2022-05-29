@@ -4,6 +4,7 @@ use App\Http\Controllers\BookController;
 use App\Http\Controllers\CustomerController;
 use App\Http\Controllers\ForgotpasswordController;
 use App\Http\Controllers\FrontController;
+use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\RoomtypeController;
 use App\Models\Roomtype;
@@ -93,6 +94,15 @@ Route::middleware(['auth:sanctum', 'isAdmin'])->group(function () {
     Route::apiResource('employees', \App\Http\Controllers\EmployeeController::class);
 
     Route::apiResource('housekeepings', \App\Http\Controllers\HousekeepingController::class);
+});
+
+Route::controller(NotificationController::class)->middleware('auth:sanctum')->group(function () {
+    Route::get("/notifications", 'all');
+    Route::get("/notifications/markasread/{id}", 'markasread');
+    Route::get("/notifications/markallasread", 'markallasread');
+    Route::get("/hasnotifications", 'hasNotifications');
+    Route::get("/hasunread", 'hasUnread');
+    Route::get("/countnotifications", 'countNotifications');
 });
 
 Route::apiResource('users', \App\Http\Controllers\UserController::class);

@@ -7,15 +7,16 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
 
-class HallBookingConfirmed extends Notification
+class HallBookingCanceled extends Notification
 {
     use Queueable;
-    private $hallbook;
+
     /**
      * Create a new notification instance.
      *
      * @return void
      */
+    private $hallbook;
     public function __construct($hallbook)
     {
         $this->hallbook = $hallbook;
@@ -29,7 +30,7 @@ class HallBookingConfirmed extends Notification
      */
     public function via($notifiable)
     {
-        return ['mail', 'database'];
+        return ['database'];
     }
 
     /**
@@ -41,10 +42,9 @@ class HallBookingConfirmed extends Notification
     public function toMail($notifiable)
     {
         return (new MailMessage)
-            ->greeting('Hello ' . $this->hallbook->user->name)
-            ->line('Your booking for hall is confirmed')
-            ->action('View Bookings', url('/'))
-            ->line('Thank you for booking a room!');
+            ->line('The introduction to the notification.')
+            ->action('Notification Action', url('/'))
+            ->line('Thank you for using our application!');
     }
 
     /**
@@ -56,10 +56,10 @@ class HallBookingConfirmed extends Notification
     public function toArray($notifiable)
     {
         return [
-            'message' => ucwords('Your booking for hall: ' . $this->hallbook->hall->name . ' is confirmed'),
+            'message' => ucwords('Your booking for hall: ' . $this->hallbook->hall->name . ' is Canceled'),
             'url-text' => 'View Bookings',
             'url' => '/myhallbookings',
-            'theme' => 'success'
+            'theme' => 'error'
         ];
     }
 }

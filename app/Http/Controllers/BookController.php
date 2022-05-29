@@ -11,6 +11,7 @@ use App\Models\User;
 use App\Notifications\BookingConfirmed;
 use App\Notifications\BookingRequestSent;
 use App\Notifications\BookingStatusChanged;
+use App\Notifications\RoomBookingCanceled;
 use ErrorException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
@@ -68,9 +69,9 @@ class BookController extends Controller
         $rooms = Room::whereNotIn('id', $booking_rooms)->get()->pluck('id')->toArray();
 
         if (in_array($data['room_id'], $rooms)) {
-            Book::create($data);
+            $book = Book::create($data);
             $bookingdetail = [
-                "body" => "Your Booking Request Has Been Sent Successfully",
+                "body" => "Your Booking Request for Room No. " . $book->room->room_no .  " of type: " . $book->roomtype->type_name . " Has Been Sent Successfully",
                 "footer" => "We will reach back to you soon",
                 "url" => url('localhost:3000/bookings')
             ];
@@ -138,17 +139,23 @@ class BookController extends Controller
 
     public function changeBookingStatus(Request $request, Book $book)
     {
+        $user = User::find($book->user_id);
         $book->update([
             'status' => $request->status
         ]);
         if ($book->status == "Confirmed") {
-            $user = User::find($book->user_id);
             $user->notify(new BookingConfirmed($book));
+        }
+
+        if ($book->status === "Canceled") {
+            $user->notify(new RoomBookingCanceled($book));
         }
 
         if ($book->status == "Checked Out" || $book->status == "Canceled") {
             $book->delete();
         }
+
+
         return response()->json([
             'message' => 'Booking Status Updated',
         ]);

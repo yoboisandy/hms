@@ -22,7 +22,7 @@ class CustomerController extends Controller
         $data = $request->validate([
             'firstname' => ['required', 'regex:/^[a-zA-z ]{1,}$/'],
             'lastname' => ['required', 'regex:/^[a-zA-z ]{1,}$/'],
-            'email' => ['required', 'email', 'unique:customers,email'],
+            'email' => ['required', 'email', 'unique:customers,email', 'regex:/^([a-z0-9]+)(\.[a-z0-9\+_\-]+)*@([a-z0-9\-]+\.)+[a-z]{2,6}$/ix'],
             'phone' => ['required', 'integer', 'digits:10', 'regex:/((98)|(97))(\d){8}/'],
             'address' => ['required'],
             'password' => ['required', 'min:8'],
@@ -63,7 +63,7 @@ class CustomerController extends Controller
 
         if ($customer->email !== $request->email) {
             $request->validate([
-                'email' => ['required', 'email', 'unique:customers,email,' . $customer->id]
+                'email' => ['required', 'email', 'regex:/^([a-z0-9]+)(\.[a-z0-9\+_\-]+)*@([a-z0-9\-]+\.)+[a-z]{2,6}$/ix', 'unique:customers,email,' . $customer->id]
             ]);
             $data['email'] = $request->email;
             $userdata['email'] = $request->email;
@@ -93,7 +93,7 @@ class CustomerController extends Controller
         $data = $request->validate([
             'firstname' => ['required', 'regex:/^[a-zA-z ]{1,}$/'],
             'lastname' => ['required', 'regex:/^[a-zA-z ]{1,}$/'],
-            'email' => ['required', 'email', 'unique:customers,email'],
+            'email' => ['required', 'email', 'unique:customers,email', 'regex:/^([a-z0-9]+)(\.[a-z0-9\+_\-]+)*@([a-z0-9\-]+\.)+[a-z]{2,6}$/ix'],
             'phone' => ['required', 'integer', 'digits:10', 'regex:/((98)|(97))(\d){8}/'],
             'address' => ['required'],
             'password' => ['required', 'min:8'],
