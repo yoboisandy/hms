@@ -58,7 +58,8 @@ class BookController extends Controller
             ->get('price');
         $price = $a->sum('price');
 
-        $data['price'] = $price;
+        $data['price'] = $price * $end_date->diffInDays($start_date);
+
 
         $booking_rooms = Book::whereBetween('start_date', [$start_date, $end_date])
             ->orWhereBetween('end_date', [$start_date, $end_date])

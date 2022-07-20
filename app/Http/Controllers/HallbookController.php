@@ -49,29 +49,43 @@ class HallbookController extends Controller
 
         // return $hall;
 
-        $booking_halls = Hallbook::where('hall_id', $request->hall_id)
-            ->whereBetween('start_date', [$start_date, $end_date])
-            ->orWhereBetween('end_date', [$start_date, $end_date])
-            ->get()
-            ->pluck('hall_id')
-            ->count();
+        // $booking_halls = Hallbook::where('hall_id', $request->hall_id)
+        //     ->whereBetween('start_date', [$start_date, $end_date])
+        //     ->orWhereBetween('end_date', [$start_date, $end_date])
+        //     ->get()
+        //     ->pluck('hall_id')
+        //     ->count();
 
         // return $booking_halls;
 
         // $hall_available = $hall - $booking_halls;
-        if ($booking_halls > 0) {
-            return response()->json(['error' => 'No hall available for that date']);
-        } else {
-            $hallbook = Hallbook::create($data);
-            $bookingdetail = [
-                "body" => "Your Hall Booking Request For " . $hallbook->hall->name . " Has Been Sent Successfully",
-                "footer" => "We will reach back to you soon",
-                "url" => url('localhost:3000/bookings')
-            ];
-            $user = User::find(auth()->user()->id);
-            $user->notify(new HallBookingRequestSent($bookingdetail));
-            return response()->json(['message' => 'Hall booked Sucessfully']);
+        // if ($booking_halls > 0) {
+        //     return response()->json(['error' => 'No hall available for that date']);
+        // } else {
+        //     $hallbook = Hallbook::create($data);
+        //     $bookingdetail = [
+        //         "body" => "Your Hall Booking Request For " . $hallbook->hall->name . " Has Been Sent Successfully",
+        //         "footer" => "We will reach back to you soon",
+        //         "url" => url('localhost:3000/bookings')
+        //     ];
+        //     $user = User::find(auth()->user()->id);
+        //     $user->notify(new HallBookingRequestSent($bookingdetail));
+        //     return response()->json(['message' => 'Hall booked Sucessfully']);
+        // }
+        $booked = Hallbook::whereBetween('start_date', [$data["start_date"], $data["end_date"]])->orWhereBetween('end_date', [$data["start_date"], $data["end_date"]])->pluck('hall_id')->toArray();
+
+        if (in_array($data['hall_id'], $booked)) {
+            return response()->json(['error' => "This hall is not available for " .  $data['start_date'] . " to " . $data["end_date"]]);
         }
+        $hallbook = Hallbook::create($data);
+        $bookingdetail = [
+            "body" => "Your Hall Booking Request For " . $hallbook->hall->name . " Has Been Sent Successfully",
+            "footer" => "We will reach back to you soon",
+            "url" => url('localhost:3000/bookings')
+        ];
+        $user = User::find(auth()->user()->id);
+        $user->notify(new HallBookingRequestSent($bookingdetail));
+        return response()->json(['message' => 'Hall booked Sucessfully']);
     }
 
     /**

@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\BookController;
+use App\Http\Controllers\ChartController;
 use App\Http\Controllers\CustomerController;
 use App\Http\Controllers\ForgotpasswordController;
 use App\Http\Controllers\FrontController;
@@ -25,6 +26,11 @@ Route::post('/hallavailability', [App\Http\Controllers\FrontController::class, '
 Route::get('/count', [\App\Http\Controllers\CountController::class, 'countAll']);
 Route::get('/myorders', [FrontController::class, 'foodOrders'])->middleware('auth:sanctum');
 
+// chart
+Route::get('/alltimeroomreport', [ChartController::class, 'allTimeRoomReport']);
+Route::get('/alltimehallreport', [ChartController::class, 'allTimeHallReport']);
+Route::get('/thisweekroomreport', [ChartController::class, 'thisWeekRoomReport']);
+Route::get('/thisweekhallreport', [ChartController::class, 'thisWeekHallReport']);
 
 // forget password
 Route::post('/forgotpassword', [ForgotpasswordController::class, 'email']);
